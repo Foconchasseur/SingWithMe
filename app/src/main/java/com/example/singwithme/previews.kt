@@ -1,5 +1,6 @@
 package com.example.singwithme
 
+import MenuScreen
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -23,7 +24,14 @@ fun PlaybackScreenPreview() {
         onPauseClick = {},
         onRestartClick = {},
         onMenuClick = {},
-        songs = listOf("Song 1", "Song 2", "Song 3", "Song 4"),
+
+    )
+}
+
+@Preview(showBackground = true, widthDp = 800, heightDp = 400)
+@Composable
+fun MenuScreenPreview() {
+    MenuScreen(
         onSongSelected = {}
     )
 }

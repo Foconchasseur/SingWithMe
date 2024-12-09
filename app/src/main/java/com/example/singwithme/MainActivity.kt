@@ -71,7 +71,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.example.singwithme.data.models.LyricLine
 import com.example.singwithme.data.models.Music
 import com.example.singwithme.ui.components.KaraokeSimpleText
 import com.example.singwithme.ui.components.MusicCard
@@ -89,8 +88,7 @@ class MainActivity : ComponentActivity() {
                 onPauseClick = {},
                 onRestartClick = {},
                 onMenuClick = {},
-                songs = listOf("Song 1", "Song 2", "Song 3", "Song 4"),
-                onSongSelected = {}
+
             )
         }
     }
@@ -111,27 +109,6 @@ fun KaraokeSimpleTextAnimatePreview(){
     KaraokeSimpleTextAnimate(5, "ceci est un test")
 }
 
-
-@Composable
-fun AnimatedLyrics(lyrics: List<LyricLine>) {
-    var currentLineIndex by remember { mutableStateOf(0) }
-    val coroutineScope = rememberCoroutineScope()
-
-    if (currentLineIndex < lyrics.size) {
-        val currentLine = lyrics[currentLineIndex]
-        val duration = ((currentLine.endTime - currentLine.startTime) * 1000).toInt()
-
-        KaraokeSimpleTextAnimate(
-            duration = duration,
-            text = currentLine.text
-        )
-
-        LaunchedEffect(currentLineIndex) {
-            kotlinx.coroutines.delay(duration.toLong())
-            currentLineIndex++
-        }
-    }
-}
 
 
 

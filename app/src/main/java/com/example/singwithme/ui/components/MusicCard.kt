@@ -2,6 +2,9 @@ package com.example.singwithme.ui.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +33,13 @@ fun MusicCard(
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
+        if (!music.locked) {
+            ActionButton(
+                icon = Icons.Default.PlayArrow,
+                contentDescription = "Menu",
+                onClick = {}
+            )
+        }
     }
 }
 
