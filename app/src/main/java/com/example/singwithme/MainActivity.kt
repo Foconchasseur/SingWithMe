@@ -2,6 +2,7 @@ package com.example.singwithme
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,6 +18,8 @@ import com.example.singwithme.ui.theme.SingWithMeTheme
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkInfo.State
+import com.example.singwithme.back.Lyrics.Music
+import com.example.singwithme.back.Lyrics.WorkerMd2Lyrics
 import com.example.singwithme.back.cache.Playlist
 import com.example.singwithme.back.cache.Song
 import com.example.singwithme.back.cache.WorkerCacheSong
@@ -32,10 +35,17 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         println("Hello")
 
-        val SavePlaylist = OneTimeWorkRequestBuilder<WorkerCachePlaylist>().build()
-        WorkManager.getInstance(this).enqueue(SavePlaylist)
+        val savePlaylistRequest = OneTimeWorkRequestBuilder<WorkerCachePlaylist>().build()
+        val saveMusicRequest = OneTimeWorkRequestBuilder<WorkerCacheSong>().build()
+        val md2LyricsRequest = OneTimeWorkRequestBuilder<WorkerMd2Lyrics>().build()
 
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(SavePlaylist.id).observe(this) { workInfo ->
+        WorkManager.getInstance(this)
+            .beginWith(savePlaylistRequest)
+            .then(saveMusicRequest)
+            .then(md2LyricsRequest)
+            .enqueue()
+
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(savePlaylistRequest.id).observe(this) { workInfo ->
             if (workInfo != null && workInfo.state == State.SUCCEEDED) {
                 val playlist = Playlist()
                 playlist.songs = readJsonFromCache(this)
@@ -43,9 +53,12 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        val SaveMusic = OneTimeWorkRequestBuilder<WorkerCacheSong>().build()
-        WorkManager.getInstance(this).enqueue(SaveMusic)
-
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(md2LyricsRequest.id).observe(this) { workInfo ->
+            if (workInfo != null && workInfo.state == State.SUCCEEDED) {
+                val music = Music.deserializeObjectFromCache(this, "Bohemian Rapsodie.ser")
+                Log.e("Music", music.toString())
+            }
+        }
 
         setContent {
             SingWithMeTheme {
