@@ -100,7 +100,7 @@ fun KaraokeSimpleTextAnimate(duration: Int, text: String) {
     LaunchedEffect(Unit) {
         karaokeAnimation.animateTo(1f, tween(duration, easing = LinearEasing))
     }
-    KaraokeSimpleText(text, karaokeAnimation.value, modifier = Modifier)
+    KaraokeSimpleText(text, text, text,  karaokeAnimation.value, modifier = Modifier)
 }
 
 @Preview(showBackground = true)

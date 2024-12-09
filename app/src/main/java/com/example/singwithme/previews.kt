@@ -58,7 +58,7 @@ fun MusicCardPreview() {
 @Preview(showBackground = true)
 @Composable
 fun KaraokeSimpleTextPreview() {
-    KaraokeSimpleText("test",0.17F, modifier = Modifier.fillMaxWidth())
+    KaraokeSimpleText("test", "test","test", 0.17F, modifier = Modifier.fillMaxWidth())
 }
 
 @Preview(showBackground = true)

@@ -33,8 +33,9 @@ fun Int.pxToDp() = with(LocalDensity.current) { this@pxToDp.toDp() }
 
 
 @Composable
-fun KaraokeSimpleText(text: String, progress: Float, modifier: Modifier) {
+fun KaraokeSimpleText(mainText: String, nextText : String, lastText : String, progress: Float, modifier: Modifier) {
     var fontsize = 30.sp
+    var littleFontsize = 20.sp
     var textWidth by remember { mutableStateOf(0) }
     var textHeight by remember { mutableStateOf(0) }
 
@@ -42,7 +43,7 @@ fun KaraokeSimpleText(text: String, progress: Float, modifier: Modifier) {
     Box(
         modifier = modifier,
     ){
-        Text(text,
+        Text(mainText,
             fontSize = fontsize,
             modifier = Modifier
                 .onSizeChanged { size ->
@@ -53,10 +54,26 @@ fun KaraokeSimpleText(text: String, progress: Float, modifier: Modifier) {
                 .onGloballyPositioned { coordinates ->
                     val position = coordinates.positionInParent()
                     textPosition = position
-                    Log.d("KaraokeSimpleText", "position.x = ${position.x}")
                 }
             , color= Color.Red)
-        Text(text,
+        Text(
+            nextText,
+            fontSize = littleFontsize,
+
+            modifier = Modifier
+                .offset(y = (textPosition.y - textHeight).dp)
+                .align(Alignment.Center),
+            color = Color.Black
+        )
+        Text(
+            lastText,
+            fontSize = littleFontsize,
+            modifier = Modifier
+                .offset(y = (textPosition.y + textHeight).dp)
+                .align(Alignment.Center),
+            color = Color.Red
+        )
+        Text(mainText,
             fontSize = fontsize,
             softWrap = false,
             modifier = Modifier

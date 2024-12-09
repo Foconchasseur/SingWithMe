@@ -21,6 +21,6 @@ fun KaraokeText(modifier: Modifier, /*karaokeViewModel: KaraokeViewModel = viewM
     val currentLyric by karaokeViewModel.currentLyricLine.collectAsState()
     val progress by karaokeViewModel.progress.collectAsState()
     */
-    KaraokeSimpleText("currentLyric",0.5f, modifier = modifier)
+    //KaraokeSimpleText("currentLyric",0.5f, modifier = modifier)
 }
 
