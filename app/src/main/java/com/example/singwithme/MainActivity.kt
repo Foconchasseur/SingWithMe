@@ -19,6 +19,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkInfo.State
 import com.example.singwithme.back.cache.Playlist
 import com.example.singwithme.back.cache.Song
+import com.example.singwithme.back.cache.WorkerCacheSong
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
@@ -30,16 +31,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         println("Hello")
-        val save = OneTimeWorkRequestBuilder<WorkerCachePlaylist>().build()
-        WorkManager.getInstance(this).enqueue(save)
 
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(save.id).observe(this) { workInfo ->
+        val SavePlaylist = OneTimeWorkRequestBuilder<WorkerCachePlaylist>().build()
+        WorkManager.getInstance(this).enqueue(SavePlaylist)
+
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(SavePlaylist.id).observe(this) { workInfo ->
             if (workInfo != null && workInfo.state == State.SUCCEEDED) {
                 val playlist = Playlist()
                 playlist.songs = readJsonFromCache(this)
                 println(playlist)
             }
         }
+
+        val SaveMusic = OneTimeWorkRequestBuilder<WorkerCacheSong>().build()
+        WorkManager.getInstance(this).enqueue(SaveMusic)
+
 
         setContent {
             SingWithMeTheme {

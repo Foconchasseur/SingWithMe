@@ -3,6 +3,7 @@ package com.example.singwithme.back.cache
 import androidx.work.CoroutineWorker
 import android.content.Context
 import androidx.work.WorkerParameters
+import com.example.singwithme.Constants
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -16,7 +17,7 @@ class WorkerCachePlaylist(ctx: Context, params: WorkerParameters) : CoroutineWor
         println("Hello from Caching")
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url("https://gcpa-enssat-24-25.s3.eu-west-3.amazonaws.com/playlist.json")
+            .url(Constants.PLAYLIST_URL+"/playlist.json")
             .build()
 
         val response: Response = client.newCall(request).execute()
