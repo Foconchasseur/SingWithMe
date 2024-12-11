@@ -64,6 +64,9 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
     implementation("com.google.code.gson:gson:2.8.9")
+    implementation (libs.exoplayer)
+    implementation (libs.exoplayer.ui) // Pour PlayerView
+    implementation (libs.androidx.lifecycle.runtime.ktx.v261) // Pour lifecycle
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -71,5 +74,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 
 }

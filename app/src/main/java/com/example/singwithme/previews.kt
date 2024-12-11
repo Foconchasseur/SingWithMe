@@ -15,19 +15,20 @@ import com.example.singwithme.ui.components.MusicCard
 import com.example.singwithme.ui.components.MusicGridCard
 import com.example.singwithme.ui.screens.PlaybackScreen
 import com.example.singwithme.ui.theme.SingWithMeTheme
-
+/*
 @Preview(showBackground = true, widthDp = 800, heightDp = 400)
 @Composable
 fun PlaybackScreenPreview() {
     PlaybackScreen(
         lyrics = listOf(),
+        exoPlayer = null,
         onPauseClick = {},
         onRestartClick = {},
         onMenuClick = {},
 
     )
 }
-
+*/
 @Preview(showBackground = true, widthDp = 800, heightDp = 400)
 @Composable
 fun MenuScreenPreview() {

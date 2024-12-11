@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.example.singwithme.data.models.LyricsLine
 import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.KaraokeSimpleText
+import com.google.android.exoplayer2.ExoPlayer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -39,43 +40,47 @@ fun loadLyricsFromAssets(context: Context, fileName: String): String {
 @Composable
 fun PlaybackScreen(
     lyrics : List<LyricsLine>,
+    exoPlayer: ExoPlayer,
     onPauseClick: () -> Unit,
     onRestartClick: () -> Unit,
     onMenuClick: () -> Unit,
 ) {
 
-    var load = true
-    var isRunning by remember { mutableStateOf(true) }
-    var timerValue by remember { mutableStateOf(0) }
     var currentLyricCount by remember { mutableStateOf(0) }
-    var currentProgress by remember { mutableStateOf(0F) }
-    var currentLyric by remember { mutableStateOf(lyrics[currentLyricCount]) }
-    val coroutineScope = rememberCoroutineScope()
-    var job by remember { mutableStateOf<Job?>(null) }
+    var currentLyric by remember { mutableStateOf<LyricsLine?>(null) }
+    var progress by remember { mutableStateOf(0f) }
 
-    fun startTimer() {
-        job = coroutineScope.launch {
-            while (isRunning) {
-                delay(10L) // Délai de 0.01 seconde
-                timerValue++
-                if (timerValue.toFloat() / 100 > lyrics[currentLyricCount].endTime) {
-                    Log.d("Timer","timerValue: $timerValue")
-                    currentLyricCount++
-                    if (currentLyricCount >= lyrics.size) {
-                        break
-                    }
-                }
-                var currentLyric = lyrics[currentLyricCount]
-                currentProgress = ((timerValue.toFloat()-1) / 100 - currentLyric.startTime) / (currentLyric.endTime - currentLyric.startTime)
+    LaunchedEffect(Unit) {
+        // Prépare le lecteur ExoPlayer et démarre la lecture
+        exoPlayer.prepare()
+        exoPlayer.playWhenReady = true
+    }
+
+    // Synchronisation de l'audio et des paroles
+    LaunchedEffect(exoPlayer) {
+        while (true) {
+            val currentPosition = exoPlayer.currentPosition / 1000f // En secondes
+            //Log.d("Timer", "Current position: $currentPosition")
+            if (currentLyric != null && currentPosition >= currentLyric!!.endTime) {
+                currentLyricCount = lyrics.indexOf(currentLyric) + 1
             }
+            val lyric = lyrics.find { it.startTime <= currentPosition && it.endTime > currentPosition }
+
+            //Log.d("Lyric", "Current lyric: $lyric")
+
+            currentLyric = lyric
+
+            // Si on a une ligne valide, calculer le progrès
+            currentLyric?.let {
+                progress = (currentPosition - it.startTime) / (it.endTime - it.startTime)
+            }
+            //Log.d("Progression", "Current progression: $progress")
+            // Si on dépasse la fin de la ligne, on passe à la suivante
+
+            //Log.d("LyricCount", "Current lyric count: $currentLyricCount")
+            delay(50L   ) // Vérifier toutes les 100ms
         }
     }
-    LaunchedEffect(Unit) {
-        startTimer()
-    }
-
-    val context = LocalContext.current
-    val lyricsContent = remember { loadLyricsFromAssets(context, "oasis.txt") }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -83,7 +88,7 @@ fun PlaybackScreen(
             mainText = lyrics.getOrNull(currentLyricCount)?.text ?: "",
             lastText = lyrics.getOrNull(currentLyricCount + 1)?.text ?: "",
             nextText = lyrics.getOrNull(currentLyricCount - 1)?.text ?: "",
-            progress = currentProgress,
+            progress = progress,
             modifier = Modifier
                 .align(Alignment.CenterStart) // Centre le texte à la fois verticalement
                 .fillMaxWidth() // Le texte occupe toute la largeur,
@@ -101,28 +106,20 @@ fun PlaybackScreen(
             ActionButton(
                 icon = Icons.Default.Menu,
                 contentDescription = "Menu",
-                onClick = onPauseClick
+                onClick = onMenuClick
             )
             ActionButton(
-                icon = if (isRunning) Icons.Default.ShoppingCart else Icons.Default.PlayArrow,                contentDescription = "Pause",
-                onClick = { isRunning = !isRunning
-                    if (isRunning) {
-                        startTimer()
-                    } else {
-                        job?.cancel()
-                    }}
+                icon = Icons.Default.PlayArrow,
+                contentDescription = "Pause",
+                onClick = onPauseClick
             )
             ActionButton(
                 icon = Icons.Default.Refresh,
                 contentDescription = "Restart",
                 onClick = {
-                    timerValue = 0
+                    progress = 0f
                     currentLyricCount = 0
-                    currentProgress = 0F
-                    currentLyric = lyrics[currentLyricCount]
-                    job?.cancel()
-                    startTimer()
-
+                    onRestartClick()
                 }
             )
         }

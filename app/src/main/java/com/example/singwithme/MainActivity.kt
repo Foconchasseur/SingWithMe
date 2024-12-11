@@ -1,12 +1,11 @@
 package com.example.singwithme
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.singwithme.ui.screens.PlaybackScreen
 import com.example.singwithme.back.cache.WorkerCachePlaylist
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -26,7 +25,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        println("Hello")
+
 
         val savePlaylistRequest = OneTimeWorkRequestBuilder<WorkerCachePlaylist>().build()
         val saveMusicRequest = OneTimeWorkRequestBuilder<WorkerCacheSong>().build()
@@ -51,15 +50,15 @@ class MainActivity : ComponentActivity() {
                 val music = Music.deserializeObjectFromCache(this, "Bohemian Rapsodie.ser")
                 Log.e("Music", music.toString())
 
-                setContent {
-                    PlaybackScreen(
-                        lyrics = music.lyrics,
-                        onPauseClick = {},
-                        onRestartClick = {},
-                        onMenuClick = {},
-
-                        )
+                val intent = Intent(this, KaraokeActivity::class.java).apply {
+                    putExtra("MUSIC_EXTRA", music) // Pour Serializable
+                    // ou
+                    // putExtra("MUSIC_EXTRA", music) // Pour Parcelable
                 }
+                startActivity(intent)
+
+                // Terminer MainActivity
+                finish()
             }
         }
     }
