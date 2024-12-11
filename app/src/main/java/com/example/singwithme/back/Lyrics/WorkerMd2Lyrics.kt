@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.example.singwithme.data.models.LyricsLine
+import com.example.singwithme.data.models.Music
 import java.io.File
 import java.io.FileOutputStream
 import java.io.ObjectOutputStream
@@ -59,7 +61,7 @@ class WorkerMd2Lyrics (context: Context, params: WorkerParameters) : CoroutineWo
 
 
         for (i in 0 until lyrics.size-1) {
-            lyrics[i].timeEnd=lyrics[i + 1].timeStart
+            lyrics[i].endTime=lyrics[i + 1].startTime
             val line = lyrics[i]
             Log.e("Lyrics", "LyricsLine: $line")
         }

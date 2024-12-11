@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.singwithme.data.models.Music
+import com.example.singwithme.back.cache.Song
 import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.KaraokeSimpleText
 import com.example.singwithme.ui.components.MusicCard
@@ -20,7 +20,7 @@ import com.example.singwithme.ui.theme.SingWithMeTheme
 @Composable
 fun PlaybackScreenPreview() {
     PlaybackScreen(
-        lyricsPath = "Here are the lyrics of the song scrolling across the screen...",
+        lyrics = listOf(),
         onPauseClick = {},
         onRestartClick = {},
         onMenuClick = {},
@@ -51,7 +51,7 @@ fun MusicGridCardPreview() {
 @Composable
 fun MusicCardPreview() {
     SingWithMeTheme {
-        MusicCard(Music("Booba","B2O","/",true))
+        MusicCard(Song("Booba","B2O",true,"/"))
     }
 }
 

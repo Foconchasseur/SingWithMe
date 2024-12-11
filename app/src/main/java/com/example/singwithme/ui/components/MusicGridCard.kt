@@ -11,15 +11,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.singwithme.data.models.Music
+import com.example.singwithme.back.cache.Song
+
 
 private val musicCardData = listOf(
-    Music("booba","b2o","/",true),
-    Music("Warriors","Imagine Dragons","/",false),
-    Music("B","b2o","/",true),
-    Music("Warriors","Imagine Dragons","/",true),
-    Music("booba","b2o","/",false),
-    Music("Warriors","Imagine Dragons","/",true)
+    Song("booba","b2o",true, "/"),
 )
 @Composable
 fun MusicGridCard(

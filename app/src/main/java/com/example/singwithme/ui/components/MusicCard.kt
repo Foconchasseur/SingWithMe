@@ -12,12 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.singwithme.data.models.Music
+import com.example.singwithme.back.cache.Song
 import com.example.singwithme.ui.theme.SingWithMeTheme
 
 @Composable
 fun MusicCard(
-    music: Music
+    music: Song
 ){
     Row(
         verticalAlignment = Alignment.CenterVertically,

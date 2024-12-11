@@ -1,11 +1,11 @@
-package com.example.singwithme.back.Lyrics
+package com.example.singwithme.data.models
 
 import java.io.Serializable
 
 data class LyricsLine(
-    var line: String = "",
-    var timeStart: Float = 0.0f,
-    var timeEnd: Float = 0.0f
+    var text: String = "",
+    var startTime: Float = 0.0f,
+    var endTime: Float = 0.0f
 ) : Serializable {
     companion object {
         private const val serialVersionUID: Long = 1L
