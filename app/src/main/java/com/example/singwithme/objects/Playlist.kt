@@ -2,8 +2,7 @@ package com.example.singwithme.objects
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.platform.LocalContext
-import com.example.singwithme.back.cache.Song
+import com.example.singwithme.data.models.Song
 import com.google.gson.Gson
 import java.io.File
 

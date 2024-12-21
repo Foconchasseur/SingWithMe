@@ -1,5 +1,6 @@
 package com.example.singwithme.ui.components
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -15,19 +17,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.singwithme.back.cache.Song
+import com.example.singwithme.data.models.Song
 
 @Composable
 fun SongCard(
     song: Song,
     onCardClick: (Song) -> Unit = {},
     downloadFunction: (String) -> Unit,
-    isPlayingTrue: (Boolean) -> Unit,
-navController: NavController
+    setPlayingTrue: (Boolean) -> Unit,
+    deleteFiles: (Context, String, String) -> Unit,
+    navController: NavController
 ) {
-
+    val currentContext = LocalContext.current
     val backgroundColor = if (song.locked) {
         MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f) // Grisé si locked
     } else {
@@ -75,10 +79,18 @@ navController: NavController
                 }
             } else {
                 ActionButton(
+                    icon = Icons.Default.Delete, // Bouton lecture
+                    contentDescription = "Delete",
+                    onClick = {
+                        val fileName = song.path.substringBefore(".").replace("/","_")
+                        song.id?.let { deleteFiles(currentContext,fileName, it) }
+                    }
+                )
+                ActionButton(
                     icon = Icons.Default.PlayArrow, // Bouton lecture
                     contentDescription = "Play",
                     onClick = {
-                        isPlayingTrue(true)
+                        setPlayingTrue(true)
                         val fileName = song.path.substringBefore(".").replace("/","_")
                         navController.navigate("playback/$fileName")
                     }

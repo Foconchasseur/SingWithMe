@@ -1,5 +1,6 @@
 package com.example.singwithme.ui.components
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.height
@@ -11,16 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.singwithme.back.cache.Song
-import com.example.singwithme.viewmodel.MusicViewModel
+import com.example.singwithme.data.models.Song
 
 
 @Composable
-fun MusicGridCard(
+fun SongGridCard(
     playlist : List<Song>,
     modifier: Modifier = Modifier,
     downloadFunction: (String) -> Unit,
-    isPlayingTrue: (Boolean) -> Unit,
+    setPlayingTrue: (Boolean) -> Unit,
+    deleteFiles: (Context, String, String) -> Unit,
     navController: NavController
 ) {
     Log.d("playlist", playlist.toString())
@@ -33,7 +34,13 @@ fun MusicGridCard(
     ) {
 
         items(playlist) { item ->
-            SongCard(item, downloadFunction = downloadFunction, navController = navController, isPlayingTrue = isPlayingTrue)
+            SongCard(
+                item,
+                downloadFunction = downloadFunction,
+                navController = navController,
+                setPlayingTrue = setPlayingTrue,
+                deleteFiles = deleteFiles
+                )
         }
     }
 }

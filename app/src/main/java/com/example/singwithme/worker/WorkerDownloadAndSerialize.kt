@@ -4,9 +4,9 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.singwithme.Constants
+import com.example.singwithme.objects.Constants
 import com.example.singwithme.data.models.LyricsLine
-import com.example.singwithme.data.models.Music
+import com.example.singwithme.data.models.SongData
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -54,7 +54,7 @@ class WorkerDownloadAndSerialize(
         }
     }
 
-    private fun parseMarkdownToMusic(markdown: String): Music {
+    private fun parseMarkdownToMusic(markdown: String): SongData {
         val lines = markdown.split("\n")
         val title = lines[2]
         val artist = lines[4]
@@ -83,15 +83,15 @@ class WorkerDownloadAndSerialize(
             lyrics[i].endTime = lyrics[i + 1].startTime
         }
 
-        return Music(title, artist, lyrics, track)
+        return SongData(title, artist, lyrics, track)
     }
 
-    private fun serializeObjectToCache(context: Context, music: Music, fileName: String) {
+    private fun serializeObjectToCache(context: Context, songData: SongData, fileName: String) {
         val cacheDir = context.cacheDir
         val file = File(cacheDir, fileName)
         FileOutputStream(file).use { fos ->
             ObjectOutputStream(fos).use { oos ->
-                oos.writeObject(music)
+                oos.writeObject(songData)
             }
         }
         Log.e("serializeObjectToCache", "Serialized object saved as $fileName")

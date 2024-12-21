@@ -2,9 +2,8 @@ package com.example.singwithme.repository
 
 import android.content.Context
 import android.util.Log
-import com.example.singwithme.Constants
-import com.example.singwithme.back.cache.Song
-import com.example.singwithme.objects.Playlist
+import com.example.singwithme.objects.Constants
+import com.example.singwithme.data.models.Song
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers

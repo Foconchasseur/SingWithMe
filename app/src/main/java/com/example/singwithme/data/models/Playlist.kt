@@ -1,4 +1,4 @@
-package com.example.singwithme.back.cache
+package com.example.singwithme.data.models
 
 data class Playlist (
     var songs: List<Song>? = listOf()

@@ -2,7 +2,6 @@ package com.example.singwithme.ui
 
 import MenuScreen
 import KaraokeViewModel
-import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -10,14 +9,12 @@ import androidx.core.net.toUri
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.singwithme.back.cache.Song
 import com.example.singwithme.objects.CurrentMusicData
 import com.example.singwithme.objects.MusicUtils
 import com.example.singwithme.objects.Playlist
-import com.example.singwithme.repository.MusicRepository
+import com.example.singwithme.ui.components.SongGridCard
 import com.example.singwithme.ui.screens.PlaybackScreenContent
-import com.example.singwithme.viewmodel.MusicViewModel
-import com.google.android.exoplayer2.ExoPlayer
+import com.example.singwithme.viewmodel.DownloadViewModel
 import java.io.File
 
 @Composable
@@ -26,7 +23,7 @@ fun KaraokeNavigation() {
     val playlist = Playlist.songs
     val navController = rememberNavController()
     val karaokeViewModel = KaraokeViewModel()
-    val menuViewModel = MusicViewModel(currentContext)
+    val downloadViewModel = DownloadViewModel(currentContext)
 
     NavHost(
         navController = navController,
@@ -34,7 +31,12 @@ fun KaraokeNavigation() {
     ) {
         composable("menu") {
             Log.d("Menu","Affichage du menu")
-            MenuScreen(navController, playlist, menuViewModel::downloadAndSerializeSong, karaokeViewModel::setPlaying)
+            MenuScreen(
+                navController = navController,
+                playlist = playlist,
+                downloadFunction = downloadViewModel::downloadAndSerializeSong,
+                setPlayingTrue = karaokeViewModel::setPlaying,
+                deleteFiles = downloadViewModel::deleteDownloadedFiles)
         }
         composable("playback/{fileName}") { backStackEntry ->
             val fileName = backStackEntry.arguments?.getString("fileName") ?: ""
@@ -48,6 +50,7 @@ fun KaraokeNavigation() {
         }
     }
 }
+
 
 
 
