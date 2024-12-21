@@ -17,7 +17,7 @@ class WorkerCacheSong(ctx: Context, params: WorkerParameters) : CoroutineWorker(
         println("Hello from Caching Song")
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(Constants.PLAYLIST_URL+"/Bohemian/Bohemian.md")
+            .url(Constants.PLAYLIST_URL+"/Bohemian/Bohemian.md") // URL de téléchargement des paroles
             .build()
 
         val response: Response = client.newCall(request).execute()
@@ -40,7 +40,7 @@ class WorkerCacheSong(ctx: Context, params: WorkerParameters) : CoroutineWorker(
 
     private fun saveMdToCache(jsonData: String, name: String) {
         val cacheDir = applicationContext.cacheDir
-        val MdFile = File(cacheDir, "$name.md")
+        val MdFile = File(cacheDir, "$name.md") //Stock le fichier brut de lyrics dans le cache
         Log.e("MdFile", "Try to save Md file to cache")
         FileWriter(MdFile).use { writer ->
             writer.write(jsonData)

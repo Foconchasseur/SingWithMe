@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".KaraokeApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,7 +16,7 @@
         android:theme="@style/Theme.SingWithMe"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".KaraokeActivity"
             android:exported="true"
             android:theme="@style/Theme.SingWithMe">
             <intent-filter>
@@ -23,9 +24,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".KaraokeActivity">
-            <!-- Optionnel: Ajouter un intent-filter si nécessaire -->
         </activity>
     </application>
 

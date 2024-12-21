@@ -1,6 +1,5 @@
 package com.example.singwithme
 
-import MenuScreen
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -11,10 +10,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.singwithme.back.cache.Song
 import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.KaraokeSimpleText
-import com.example.singwithme.ui.components.MusicCard
-import com.example.singwithme.ui.components.MusicGridCard
-import com.example.singwithme.ui.screens.PlaybackScreen
+import com.example.singwithme.ui.components.SongCard
 import com.example.singwithme.ui.theme.SingWithMeTheme
+
+private val musicCardData = listOf(
+    Song("Wonderwall - Remastered", "Oasis", true, "/", false),
+    Song("Don't Look Back in Anger - Remastered", "Oasis", false, "DontLookBack/DontLookBack.md", false),
+    Song("Stand by Me", "Oasis", true, "/",false),
+    Song("Bohemian Rhapsody", "Queen", false, "Bohemian/Bohemian.md",true),
+    Song("Love Me Like There's No Tomorrow - Special Edition", "Freddie Mercury", true, "/",false)
+)
 /*
 @Preview(showBackground = true, widthDp = 800, heightDp = 400)
 @Composable
@@ -29,13 +34,17 @@ fun PlaybackScreenPreview() {
     )
 }
 */
+/*
 @Preview(showBackground = true, widthDp = 800, heightDp = 400)
 @Composable
 fun MenuScreenPreview() {
     MenuScreen(
-        onSongSelected = {}
+        navController =
+        //onSongSelected = {}
     )
 }
+*/
+
 /*
 @Preview(showBackground = true)
 @Composable
@@ -43,19 +52,22 @@ fun NavigationRail(){
     NavigationRail()
 }
 */
+/*
 @Preview(showBackground = true)
 @Composable
 fun MusicGridCardPreview() {
     MusicGridCard()
 }
+*/
+/*
 @Preview(showBackground = true)
 @Composable
 fun MusicCardPreview() {
     SingWithMeTheme {
-        MusicCard(Song("Booba","B2O",true,"/"))
+        SongCard(Song("Booba","B2O",true,"/",false))
     }
 }
-
+*/
 @Preview(showBackground = true)
 @Composable
 fun KaraokeSimpleTextPreview() {

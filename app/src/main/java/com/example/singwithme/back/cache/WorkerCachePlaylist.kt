@@ -17,7 +17,7 @@ class WorkerCachePlaylist(ctx: Context, params: WorkerParameters) : CoroutineWor
         println("Hello from Caching")
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(Constants.PLAYLIST_URL+"/playlist.json")
+            .url(Constants.PLAYLIST_URL+"/playlist.json") //Récupère le fichier de playlist
             .build()
 
         val response: Response = client.newCall(request).execute()

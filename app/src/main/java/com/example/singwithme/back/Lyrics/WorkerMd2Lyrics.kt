@@ -15,7 +15,7 @@ class WorkerMd2Lyrics (context: Context, params: WorkerParameters) : CoroutineWo
     override suspend fun doWork(): Result {
         Log.e("WorkerMd2Lyrics", "Hello from WorkerMd2Lyrics")
 
-        val markdown = loadMarkdownFileAsString("Bohemian.md")
+        val markdown = loadMarkdownFileAsString("Bohemian.md") //Charger le fichier déjà télécharger pour le sérialiser
         val music = parseMarkdownToLyrics(markdown)
         serializeObjectToCache(applicationContext, music, music.title+".ser")
 

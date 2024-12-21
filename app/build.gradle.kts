@@ -64,6 +64,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
     implementation("com.google.code.gson:gson:2.8.9")
+    implementation("androidx.navigation:navigation-compose:2.7.2")
     implementation (libs.exoplayer)
     implementation (libs.exoplayer.ui) // Pour PlayerView
     implementation (libs.androidx.lifecycle.runtime.ktx.v261) // Pour lifecycle

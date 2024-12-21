@@ -1,51 +1,83 @@
-package com.example.singwithme.viewmodel
-
+import android.annotation.SuppressLint
+import android.app.Application
+import android.content.Context
+import android.net.Uri
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import com.example.singwithme.KaraokeApplication
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import java.io.File
+import kotlin.math.exp
+import kotlin.math.truncate
 
-class KaraokeViewModel : ViewModel() {
-    private val _lyrics = MutableStateFlow("Initializing lyrics...")
-    val lyrics: StateFlow<String> = _lyrics
+class KaraokeViewModel() : ViewModel() {
 
-    private val _progress = MutableStateFlow(0f)
-    val progress: StateFlow<Float> = _progress
 
-    private val _isPlaying = MutableStateFlow(false)
-    val isPlaying: StateFlow<Boolean> = _isPlaying
+    ///
+    // Gestion du player MP3
+    ///
+    // ExoPlayer instance
+    @SuppressLint("StaticFieldLeak")
+    private val context = KaraokeApplication.instance.applicationContext
+    var exoPlayer : ExoPlayer? = null
+    // LiveData to observe the playback state
+    private var isPlaying = true;
 
-    private val _currentTime = MutableStateFlow(0L) // Temps écoulé en millisecondes
+    fun initializePlayer(context: Context, uri: Uri) {
+        exoPlayer?.release() // Libérer l'ancienne instance si elle existe
+        exoPlayer = ExoPlayer.Builder(context).build()
 
-    val currentTime: StateFlow<Long> = _currentTime
+        exoPlayer?.setMediaItem(MediaItem.fromUri(uri))
 
-    private val _currentLyricLine = MutableStateFlow("")
-    val currentLyricLine: StateFlow<String> = _currentLyricLine
+        exoPlayer?.seekTo(0L)
+        exoPlayer?.prepare()
 
-    fun loadLyrics(newLyrics: String) {
-        _lyrics.value = newLyrics
-    }
-
-    fun resetTimer() {
-        _currentTime.value = 0L
-        _isPlaying.value = false
-    }
-
-    fun togglePlayPause() {
-        _isPlaying.value = !_isPlaying.value
-        if (_isPlaying.value) {
-            startTimer() // Reprendre le timer
+        if (isPlaying) {
+            exoPlayer?.play() // Reprendre la lecture si elle était en cours
         }
+
+
+    }
+    fun release() {
+        exoPlayer?.release()
     }
 
-    fun startTimer() {
-        viewModelScope.launch {
-            while (_isPlaying.value) { // Tant que la lecture est active
-                delay(100) // Attendre 100 ms
-                _currentTime.value += 100 // Incrémenter de 100 ms
-            }
+    // Pause the audio
+    fun pause() {
+        if (isPlaying) {
+            exoPlayer?.pause()
+            isPlaying = false
+        } else {
+            exoPlayer?.play()
+            isPlaying = true
         }
+
+    }
+
+    // Stop the audio
+    fun stop() {
+        exoPlayer?.release()
+        isPlaying = false
+    }
+
+    fun getCurrentPosition(): Long? {
+        return exoPlayer?.currentPosition
+    }
+
+    fun reset() {
+        exoPlayer?.stop()
+        exoPlayer?.play()
+    }
+
+    fun setPlaying(isplaying : Boolean){
+        isPlaying = isplaying
+    }
+    // Release the player when the ViewModel is cleared
+    override fun onCleared() {
+        super.onCleared()
+        exoPlayer?.release()
     }
 }

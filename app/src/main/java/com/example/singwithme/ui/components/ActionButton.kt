@@ -17,13 +17,13 @@ import androidx.compose.ui.unit.dp
 fun ActionButton(
     icon: ImageVector,
     contentDescription: String,
-    onClick: () -> Unit,
+    onClick:  () -> Unit,
     modifier: Modifier = Modifier,
     tint: Color = Color.Black,
     size: Dp = 48.dp
 ) {
     IconButton(
-        onClick = onClick,
+        onClick = {onClick()},
         modifier = modifier
     ) {
         Icon(
