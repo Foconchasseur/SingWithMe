@@ -68,8 +68,10 @@ class KaraokeViewModel() : ViewModel() {
     }
 
     fun reset() {
-        exoPlayer?.stop()
-        exoPlayer?.play()
+        exoPlayer?.seekTo(0L)
+        if (!isPlaying) {
+            exoPlayer?.play()
+        }
     }
 
     fun setPlaying(isplaying : Boolean){

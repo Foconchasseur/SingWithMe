@@ -25,7 +25,9 @@ class KaraokeActivity : ComponentActivity() {
         CoroutineScope(Dispatchers.Main).launch {
 
             //Playlist.songs.clear()
-            Playlist.songs.addAll(playlistRepository.getMusicData())
+            if (Playlist.songs.isEmpty()){
+                Playlist.songs.addAll(playlistRepository.getMusicData())
+            }
             Playlist.cacheFile = playlistRepository.getCacheFile()
 
             setContent {
