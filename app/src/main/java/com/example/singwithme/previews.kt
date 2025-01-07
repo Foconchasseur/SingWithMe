@@ -7,16 +7,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.singwithme.data.models.ID
 import com.example.singwithme.data.models.Song
 import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.KaraokeSimpleText
 
+
+
 private val musicCardData = listOf(
-    Song("Wonderwall - Remastered", "Oasis", true, "/", false),
-    Song("Don't Look Back in Anger - Remastered", "Oasis", false, "DontLookBack/DontLookBack.md", false),
-    Song("Stand by Me", "Oasis", true, "/",false),
-    Song("Bohemian Rhapsody", "Queen", false, "Bohemian/Bohemian.md",true),
-    Song("Love Me Like There's No Tomorrow - Special Edition", "Freddie Mercury", true, "/",false)
+    Song(ID("Wonderwall - Remastered", "Oasis"), true, "/", false),
+    Song(ID("Don't Look Back in Anger - Remastered", "Oasis"), false, "DontLookBack/DontLookBack.md", false),
+    Song(ID("Stand by Me", "Oasis"), true, "/",false),
+    Song(ID("Bohemian Rhapsody", "Queen"), false, "Bohemian/Bohemian.md",true),
+    Song(ID("Love Me Like There's No Tomorrow - Special Edition", "Freddie Mercury"), true, "/",false)
 )
 /*
 @Preview(showBackground = true, widthDp = 800, heightDp = 400)

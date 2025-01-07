@@ -10,6 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.File
 import java.util.UUID
 
@@ -45,13 +47,6 @@ class PlaylistRepository(private val context: Context) {
         val type = object : TypeToken<List<Song>>() {}.type
         val songs = Gson().fromJson<List<Song>>(json, type)
 
-        // Ajouter un ID unique à chaque chanson si manquant
-        songs.forEach { song ->
-            if (song.id == null) {
-                song.id = UUID.randomUUID().toString()
-            }
-        }
-
         return songs
     }
 
@@ -65,7 +60,10 @@ class PlaylistRepository(private val context: Context) {
 
                 if (response.isSuccessful) {
                     // Télécharger le JSON
-                    val json = response.body?.string().orEmpty()
+                    val inputJson = response.body?.string().orEmpty()
+
+                    val json = transformJsonArray(inputJson)
+                    Log.d("json", json)
                     // Sauvegarder le fichier dans le cache
                     saveMusicDataToCache(json)
                     // Désérialiser et retourner la liste des musiques
@@ -80,7 +78,33 @@ class PlaylistRepository(private val context: Context) {
             }
         }
     }
+    fun transformJsonArray(input: String): String {
+        val originalArray = JSONArray(input)
+        val transformedArray = JSONArray()
 
+        for (i in 0 until originalArray.length()) {
+            val originalObject = originalArray.getJSONObject(i)
+            Log.d("originalObject",originalObject.toString())
+            // Créer l'objet "id"
+            val id = JSONObject()
+            id.put("name", originalObject.getString("name"))
+            id.put("artist", originalObject.getString("artist"))
+            Log.d("id",id.toString())
+            // Créer le nouvel objet transformé
+            val transformedObject = JSONObject()
+            transformedObject.put("id", id)
+            val locked =  originalObject.optBoolean("locked", false)
+            transformedObject.put("locked", locked)
+            val path = originalObject.optString("path","")
+            transformedObject.put("path", path)
+            transformedObject.put("downloaded", false)
+
+            // Ajouter au tableau transformé
+            transformedArray.put(transformedObject)
+        }
+
+        return transformedArray.toString(4) // Beautifie la sortie avec une indentation
+    }
     // Sauvegarder les données téléchargées dans le cache
     private fun saveMusicDataToCache(json: String) {
         cacheFile.outputStream().use { outputStream ->

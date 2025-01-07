@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.singwithme.data.models.ID
 import com.example.singwithme.data.models.Song
 
 
@@ -19,9 +20,9 @@ import com.example.singwithme.data.models.Song
 fun SongGridCard(
     playlist : List<Song>,
     modifier: Modifier = Modifier,
-    downloadFunction: (String) -> Unit,
+    downloadFunction: (ID) -> Unit,
     setPlayingTrue: (Boolean) -> Unit,
-    deleteFiles: (Context, String, String) -> Unit,
+    deleteFiles: (Context, String, ID) -> Unit,
     navController: NavController
 ) {
     Log.d("playlist", playlist.toString())

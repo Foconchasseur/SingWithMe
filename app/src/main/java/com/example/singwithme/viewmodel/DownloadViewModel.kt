@@ -3,6 +3,7 @@ package com.example.singwithme.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.singwithme.data.models.ID
 import com.example.singwithme.objects.Playlist
 import com.example.singwithme.worker.TaskManager
 import kotlinx.coroutines.launch
@@ -11,13 +12,13 @@ import java.io.File
 class DownloadViewModel (private val context: Context) : ViewModel(){
     private val taskManager = TaskManager(context)
 
-    fun downloadAndSerializeSong(id: String) {
+    fun downloadAndSerializeSong(id: ID) {
         viewModelScope.launch {
             taskManager.downloadAndSerializeMusic(id)
         }
     }
 
-    fun deleteDownloadedFiles(context: Context, fileName: String, id : String) {
+    fun deleteDownloadedFiles(context: Context, fileName: String, id : ID) {
         val file1 = File(context.cacheDir, "$fileName.ser")
         val file2 = File(context.cacheDir, "$fileName.mp3")
         println("Chemin du fichier 1: ${file1.absolutePath}")

@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.singwithme.data.models.ID
 import com.example.singwithme.data.models.Song
 import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.SongGridCard
@@ -24,9 +25,9 @@ import com.example.singwithme.ui.components.SongGridCard
 fun MenuScreen(
     navController: NavController,
     playlist : List<Song>,
-    downloadFunction: (String) -> Unit,
+    downloadFunction: (ID) -> Unit,
     setPlayingTrue: (Boolean) -> Unit,
-    deleteFiles: (Context, String, String) -> Unit,
+    deleteFiles: (Context, String, ID) -> Unit,
     quitApplication : () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {

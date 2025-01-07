@@ -20,15 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.singwithme.data.models.ID
 import com.example.singwithme.data.models.Song
 
 @Composable
 fun SongCard(
     song: Song,
     onCardClick: (Song) -> Unit = {},
-    downloadFunction: (String) -> Unit,
+    downloadFunction: (ID) -> Unit,
     setPlayingTrue: (Boolean) -> Unit,
-    deleteFiles: (Context, String, String) -> Unit,
+    deleteFiles: (Context, String, ID) -> Unit,
     navController: NavController
 ) {
     val currentContext = LocalContext.current
@@ -53,12 +54,12 @@ fun SongCard(
             .padding(16.dp)
     ) {
         Text(
-            text = song.artist,
+            text = song.id.artist,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = song.name,
+            text = song.id.name,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(2f)
         )
@@ -66,7 +67,7 @@ fun SongCard(
             if (!song.downloaded) {
                 Button(
                     onClick = {
-                        Log.d("Button Download", "Le bouton a ete appuyé sur la musique "+ song.name)
+                        Log.d("Button Download", "Le bouton a ete appuyé sur la musique "+ song.id.name)
                         song.id?.let { downloadFunction(it) }
                     },
                     modifier = Modifier

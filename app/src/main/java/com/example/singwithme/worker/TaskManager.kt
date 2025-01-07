@@ -9,6 +9,7 @@ import androidx.work.WorkManager
 import androidx.work.await
 import androidx.work.workDataOf
 import com.example.singwithme.back.WorkerDownloadAndSerialize
+import com.example.singwithme.data.models.ID
 import com.example.singwithme.objects.Playlist
 
 class TaskManager (private val context: Context){
@@ -17,7 +18,7 @@ class TaskManager (private val context: Context){
 
     @SuppressLint("RestrictedApi")
     suspend fun downloadAndSerializeMusic(
-        id: String,
+        id: ID,
     ) {
         try {
             val songPath = Playlist.getSongById(id)?.path?.substringBefore(".");
