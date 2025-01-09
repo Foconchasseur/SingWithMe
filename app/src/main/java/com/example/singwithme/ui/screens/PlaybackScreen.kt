@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import com.example.singwithme.data.models.LyricsLine
 import com.example.singwithme.objects.CurrentMusicData
 import com.example.singwithme.ui.components.ActionButton
+import com.example.singwithme.ui.components.Cursor
 import com.example.singwithme.ui.components.KaraokeSimpleText
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -55,7 +56,6 @@ fun PlaybackScreen(
     onMenuClick: () -> Unit,
 ) {
     val lyrics = CurrentMusicData.lyrics
-    Log.d("lyrics",lyrics.toString())
     var currentLyricCount by remember { mutableStateOf(0) }
     var currentLyric by remember { mutableStateOf<LyricsLine?>(null) }
     var progress by remember { mutableStateOf(0f) }
@@ -102,8 +102,8 @@ fun PlaybackScreen(
             modifier = Modifier
                 .align(Alignment.CenterStart) // Centre le texte à la fois verticalement
                 .fillMaxWidth() // Le texte occupe toute la largeur,
-        )
 
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
