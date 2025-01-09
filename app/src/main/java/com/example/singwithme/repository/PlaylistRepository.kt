@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.example.singwithme.objects.Constants
 import com.example.singwithme.data.models.Song
+import com.example.singwithme.objects.Playlist
+import com.example.singwithme.objects.Playlist.songs
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +15,6 @@ import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
-import java.util.UUID
 
 class PlaylistRepository(private val context: Context) {
     private val cacheFile = File(context.cacheDir, "playlist.json")
@@ -21,21 +22,75 @@ class PlaylistRepository(private val context: Context) {
     // URL du fichier JSON à télécharger
     private val musicJsonUrl = Constants.PLAYLIST_URL+"/playlist.json"
 
-    // Charger la liste depuis le cache ou télécharger le fichier si nécessaire
-    suspend fun getMusicData(): List<Song> {
-        val songs = if (cacheFile.exists()) {
-            // Si le fichier est en cache, le lire
-            readMusicDataFromCache()
-        } else {
-            // Sinon, télécharger le fichier et le mettre en cache
-            downloadAndCacheMusicData()
+    fun iniliazePlaylist() {
+        if (!cacheFile.exists()) {
+           return Playlist.songs.clear()
         }
-
-        return songs
+        else {
+            return readMusicDataFromCache()
+        }
     }
 
-    // Lire les données du cache
-    private fun readMusicDataFromCache(): List<Song> {
+    suspend fun downloadPlaylist() {
+        if (!cacheFile.exists()) {
+            firstDownloadPlaylist()
+        } else {
+            updatePlaylist()
+        }
+    }
+
+    private suspend fun firstDownloadPlaylist() {
+        return withContext(Dispatchers.IO) {
+            try {
+                val client = OkHttpClient()
+                val request = Request.Builder().url(musicJsonUrl).build()
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    // Télécharger le JSON
+                    val inputJson = response.body?.string().orEmpty()
+                    val json = transformJsonArray(inputJson)
+                    // Sauvegarder le fichier dans le cache
+                    savePlaylistToCache(json)
+                    // Désérialiser et retourner la liste des musiques
+                    deserializeMusicData(json)
+                } else {
+                    Log.e("MusicRepository", "Failed to download music data")
+                }
+            } catch (e: Exception) {
+                Log.e("MusicRepository", "Error downloading music data", e)
+            }
+        }
+    }
+
+    private suspend fun updatePlaylist(){
+        return withContext(Dispatchers.IO) {
+            try {
+                val client = OkHttpClient()
+                val request = Request.Builder().url(musicJsonUrl).build()
+                val response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    // Télécharger le JSON
+                    val inputJson = response.body?.string().orEmpty()
+                    val json = transformJsonArray(inputJson)
+                    val type = object : TypeToken<List<Song>>() {}.type
+                    val newSongs = Gson().fromJson<List<Song>>(json, type)
+                    for (newSong in newSongs) {
+                        val songIndex = Playlist.songs.indexOfFirst { it.id == newSong.id }
+                        if (songIndex != -1) {
+                            Playlist.songs.add(newSong)
+                        }
+                    }
+                    val updatedJson = Gson().toJson(Playlist.songs)
+                    savePlaylistToCache(updatedJson)
+                } else {
+                    Log.e("MusicRepository", "Failed to download music data")
+                }
+            } catch (e: Exception) {
+                Log.e("MusicRepository", "Error downloading music data", e)
+            }
+        }
+    }
+    fun readMusicDataFromCache() {
         cacheFile.inputStream().use { inputStream ->
             val json = inputStream.bufferedReader().use { it.readText() }
             return deserializeMusicData(json)
@@ -43,41 +98,27 @@ class PlaylistRepository(private val context: Context) {
     }
 
     // Désérialiser le JSON en une liste d'objets Song
-    private fun deserializeMusicData(json: String): List<Song> {
+    private fun deserializeMusicData(json: String) {
         val type = object : TypeToken<List<Song>>() {}.type
         val songs = Gson().fromJson<List<Song>>(json, type)
-
-        return songs
+        Playlist.songs.clear()
+        Playlist.songs.addAll(songs)
     }
 
-    // Télécharger le fichier et mettre en cache
-    private suspend fun downloadAndCacheMusicData(): List<Song> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val client = OkHttpClient()
-                val request = Request.Builder().url(musicJsonUrl).build()
-                val response = client.newCall(request).execute()
-
-                if (response.isSuccessful) {
-                    // Télécharger le JSON
-                    val inputJson = response.body?.string().orEmpty()
-
-                    val json = transformJsonArray(inputJson)
-                    Log.d("json", json)
-                    // Sauvegarder le fichier dans le cache
-                    saveMusicDataToCache(json)
-                    // Désérialiser et retourner la liste des musiques
-                    deserializeMusicData(json)
-                } else {
-                    Log.e("MusicRepository", "Failed to download music data")
-                    emptyList<Song>()
-                }
-            } catch (e: Exception) {
-                Log.e("MusicRepository", "Error downloading music data", e)
-                emptyList<Song>()
-            }
+    // Sauvegarder les données téléchargées dans le cache
+    private fun savePlaylistToCache(json: String) {
+        cacheFile.outputStream().use { outputStream ->
+            outputStream.write(json.toByteArray())
         }
     }
+
+    fun getCacheFile(): File {
+        return cacheFile
+    }
+
+    /**
+     * Transforme un tableau JSON en un autre tableau JSON pour correspondre à la structure de données que l'on souhaite utiliser
+     */
     fun transformJsonArray(input: String): String {
         val originalArray = JSONArray(input)
         val transformedArray = JSONArray()
@@ -104,15 +145,5 @@ class PlaylistRepository(private val context: Context) {
         }
 
         return transformedArray.toString(4) // Beautifie la sortie avec une indentation
-    }
-    // Sauvegarder les données téléchargées dans le cache
-    private fun saveMusicDataToCache(json: String) {
-        cacheFile.outputStream().use { outputStream ->
-            outputStream.write(json.toByteArray())
-        }
-    }
-
-    fun getCacheFile(): File {
-        return cacheFile
     }
 }

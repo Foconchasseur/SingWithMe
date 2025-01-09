@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +18,7 @@ import com.example.singwithme.data.models.ID
 import com.example.singwithme.data.models.Song
 import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.SongGridCard
+import com.example.singwithme.ui.components.LaunchScreen
 
 @Composable
 fun MenuScreen(
@@ -28,19 +27,24 @@ fun MenuScreen(
     downloadFunction: (ID) -> Unit,
     setPlayingTrue: (Boolean) -> Unit,
     deleteFiles: (Context, String, ID) -> Unit,
-    quitApplication : () -> Unit
+    quitApplication : () -> Unit,
+    downloadPlaylist : () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
+        if (playlist.isEmpty()) {
+           LaunchScreen()
+        } else {
+            SongGridCard(
+                playlist = playlist,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                downloadFunction = downloadFunction,
+                setPlayingTrue = setPlayingTrue,
+                deleteFiles = deleteFiles,
+                navController = navController
+            )
+        }
 
-        SongGridCard(
-            playlist = playlist,
-            modifier = Modifier
-                .fillMaxWidth(),
-            downloadFunction = downloadFunction,
-            setPlayingTrue = setPlayingTrue,
-            deleteFiles = deleteFiles,
-            navController = navController
-        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -53,9 +57,7 @@ fun MenuScreen(
             ActionButton(
                 icon = Icons.Default.Build,
                 contentDescription = "getPlaylist",
-                onClick = {
-
-                }
+                onClick = downloadPlaylist
             )
             ActionButton(
                 icon = Icons.Default.Clear,

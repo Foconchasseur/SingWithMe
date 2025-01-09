@@ -9,7 +9,7 @@ import java.io.File
 
 object Playlist {
 
-    var songs: SnapshotStateList<Song> = mutableStateListOf()
+    var songs: SnapshotStateList<Song> = mutableStateListOf<Song>()
     lateinit var cacheFile : File
 
     fun getSongById(id: ID): Song? {
@@ -35,6 +35,9 @@ object Playlist {
             saveMusicDataToCache(cacheFile)
         }
     }
+
+
+
 
     private fun saveMusicDataToCache(cacheFile : File) {
         val json = Gson().toJson(songs)

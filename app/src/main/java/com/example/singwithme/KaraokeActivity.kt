@@ -4,6 +4,8 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.example.singwithme.data.models.Song
 import com.example.singwithme.objects.Playlist
 import com.example.singwithme.repository.PlaylistRepository
 import com.example.singwithme.ui.KaraokeNavigation
@@ -24,14 +26,11 @@ class KaraokeActivity : ComponentActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
 
-            //Playlist.songs.clear()
-            if (Playlist.songs.isEmpty()){
-                Playlist.songs.addAll(playlistRepository.getMusicData())
-            }
+            playlistRepository.iniliazePlaylist()
             Playlist.cacheFile = playlistRepository.getCacheFile()
 
             setContent {
-                KaraokeNavigation()
+                KaraokeNavigation(playlistRepository)
             }
         }
     }
