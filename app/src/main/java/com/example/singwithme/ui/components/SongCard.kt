@@ -44,13 +44,6 @@ fun SongCard(
         modifier = Modifier
             .padding(8.dp)
             .background(color = backgroundColor)
-            .let {
-                if (!song.locked && song.downloaded) {
-                    it.clickable { onCardClick(song) } // Rendre cliquable si downloaded
-                } else {
-                    it
-                }
-            }
             .padding(16.dp)
     ) {
         Text(

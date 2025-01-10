@@ -2,6 +2,7 @@ package com.example.singwithme.repository
 
 import android.content.Context
 import android.util.Log
+import com.example.singwithme.data.models.ID
 import com.example.singwithme.objects.Constants
 import com.example.singwithme.data.models.Song
 import com.example.singwithme.objects.Playlist
@@ -23,18 +24,18 @@ class PlaylistRepository(private val context: Context) {
     private val musicJsonUrl = Constants.PLAYLIST_URL+"/playlist.json"
 
     fun iniliazePlaylist() {
-        if (!cacheFile.exists()) {
-           return Playlist.songs.clear()
-        }
-        else {
-            return readMusicDataFromCache()
+        if (cacheFile.exists()) {
+            Log.d("MusicRepository", "Reading music data from cache")
+            readMusicDataFromCache()
         }
     }
 
     suspend fun downloadPlaylist() {
         if (!cacheFile.exists()) {
+            Log.d("MusicRepository", "Downloading playlist")
             firstDownloadPlaylist()
         } else {
+            Log.d("MusicRepository", "Updating playlist")
             updatePlaylist()
         }
     }
@@ -76,7 +77,8 @@ class PlaylistRepository(private val context: Context) {
                     val newSongs = Gson().fromJson<List<Song>>(json, type)
                     for (newSong in newSongs) {
                         val songIndex = Playlist.songs.indexOfFirst { it.id == newSong.id }
-                        if (songIndex != -1) {
+                        Log.d("MusicRepository", "Song index: $songIndex")
+                        if (songIndex == -1) {
                             Playlist.songs.add(newSong)
                         }
                     }
@@ -125,12 +127,10 @@ class PlaylistRepository(private val context: Context) {
 
         for (i in 0 until originalArray.length()) {
             val originalObject = originalArray.getJSONObject(i)
-            Log.d("originalObject",originalObject.toString())
             // Créer l'objet "id"
             val id = JSONObject()
             id.put("name", originalObject.getString("name"))
             id.put("artist", originalObject.getString("artist"))
-            Log.d("id",id.toString())
             // Créer le nouvel objet transformé
             val transformedObject = JSONObject()
             transformedObject.put("id", id)
