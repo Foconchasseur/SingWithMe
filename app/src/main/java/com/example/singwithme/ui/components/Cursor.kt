@@ -30,7 +30,7 @@ fun Cursor(
     Box(
         modifier = modifier
             .offset(
-                x = ( ((textWidth.value * (progress-0.5)) /1.5).dp), // /1.5 sinon ça ne marche pas correctement
+                x = ( ((textWidth.value * (progress-0.5))).dp), // /1.5 sinon ça ne marche pas correctement
                 y = (textPosition.y.dp)
             )
             .size(5.dp, fontsize.value.dp) // Curseur mince et aligné à la taille du texte

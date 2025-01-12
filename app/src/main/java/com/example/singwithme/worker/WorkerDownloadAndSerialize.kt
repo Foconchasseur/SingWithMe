@@ -3,10 +3,12 @@ package com.example.singwithme.back
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.example.singwithme.objects.Constants
 import com.example.singwithme.data.models.LyricsLine
 import com.example.singwithme.data.models.SongData
+import com.example.singwithme.viewmodel.ErrorViewModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -45,12 +47,24 @@ class WorkerDownloadAndSerialize(
                 }
             }
 
+            // Si le téléchargement a échoué, on renvoie un résultat d'échec qui sera traiter par le TaskManager
             Log.e("WorkerDownloadAndSerialize", "Failed to download .md file")
-            Result.failure()
+            val errorData = Data.Builder()
+                .putString("error", "Il y a eu une erreur lors du téléchargement du fichier .md. " +
+                            "Code HTTP : \n ${response.code}"
+                )
+                .build()
+            Result.failure(errorData)
 
         } catch (e: Exception) {
-            Log.e("WorkerDownloadAndSerialize", "Error during execution: ${e.message}")
-            Result.failure()
+                // Si il y a une levée d'exception, on renvoie un résultat d'échec qui sera traiter par le TaskManager
+                Log.e("WorkerDownloadAndSerialize", "Error during execution : ${e.message}")
+                val errorData = Data.Builder()
+                    .putString("error",
+                        "Il y a eu une erreur lors du traitement du fichier de parole : \n ${e.message}"
+                    )
+                    .build()
+                Result.failure(errorData)
         }
     }
 
@@ -79,8 +93,17 @@ class WorkerDownloadAndSerialize(
             }
         }
 
+        if (lyrics.isEmpty()) {
+            // Si aucune parole n'a été trouvée, on renvoie une exception
+            throw Exception("Pas de paroles trouvées")
+        }
+
         for (i in 0 until lyrics.size - 1) {
             lyrics[i].endTime = lyrics[i + 1].startTime
+        }
+
+        if (lyrics[0].startTime != 0.0f) {
+            lyrics.add(0, LyricsLine("", 0.0f, lyrics[0].startTime))
         }
 
         return SongData(title, artist, lyrics, track)
@@ -89,11 +112,18 @@ class WorkerDownloadAndSerialize(
     private fun serializeObjectToCache(context: Context, songData: SongData, fileName: String) {
         val cacheDir = context.cacheDir
         val file = File(cacheDir, fileName)
-        FileOutputStream(file).use { fos ->
-            ObjectOutputStream(fos).use { oos ->
-                oos.writeObject(songData)
+        try {
+            FileOutputStream(file).use { fos ->
+                ObjectOutputStream(fos).use { oos ->
+                    oos.writeObject(songData)
+                }
             }
+            Log.e("serializeObjectToCache", "Serialized object saved as $fileName")
         }
-        Log.e("serializeObjectToCache", "Serialized object saved as $fileName")
+        catch (e: Exception) {
+            Log.e("serializeObjectToCache", "Error during serialization : ${e.message}")
+            throw Exception("Erreur lors de la sérialisation : \n ${e.message}")
+        }
+
     }
 }

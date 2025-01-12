@@ -19,16 +19,18 @@ import com.example.singwithme.data.models.Song
 import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.SongGridCard
 import com.example.singwithme.ui.components.LaunchScreen
+import com.example.singwithme.viewmodel.ErrorViewModel
 
 @Composable
 fun MenuScreen(
     navController: NavController,
     playlist : List<Song>,
-    downloadFunction: (ID) -> Unit,
+    downloadFunction: (ID, ErrorViewModel) -> Unit,
     setPlayingTrue: (Boolean) -> Unit,
     deleteFiles: (Context, String, ID) -> Unit,
     quitApplication : () -> Unit,
-    downloadPlaylist : () -> Unit
+    downloadPlaylist : () -> Unit,
+    errorViewModel: ErrorViewModel
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         if (playlist.isEmpty()) {
@@ -41,7 +43,8 @@ fun MenuScreen(
                 downloadFunction = downloadFunction,
                 setPlayingTrue = setPlayingTrue,
                 deleteFiles = deleteFiles,
-                navController = navController
+                navController = navController,
+                errorViewModel = errorViewModel
             )
         }
 
@@ -65,6 +68,5 @@ fun MenuScreen(
                 onClick = { quitApplication()}
             )
         }
-
     }
 }

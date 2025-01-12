@@ -14,16 +14,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.singwithme.data.models.ID
 import com.example.singwithme.data.models.Song
+import com.example.singwithme.viewmodel.ErrorViewModel
 
 
 @Composable
 fun SongGridCard(
     playlist : List<Song>,
     modifier: Modifier = Modifier,
-    downloadFunction: (ID) -> Unit,
+    downloadFunction: (ID, ErrorViewModel) -> Unit,
     setPlayingTrue: (Boolean) -> Unit,
     deleteFiles: (Context, String, ID) -> Unit,
-    navController: NavController
+    navController: NavController,
+    errorViewModel: ErrorViewModel
 ) {
     Log.d("playlist", playlist.toString())
     LazyVerticalGrid(
@@ -40,7 +42,8 @@ fun SongGridCard(
                 downloadFunction = downloadFunction,
                 navController = navController,
                 setPlayingTrue = setPlayingTrue,
-                deleteFiles = deleteFiles
+                deleteFiles = deleteFiles,
+                errorViewModel = errorViewModel
                 )
         }
     }

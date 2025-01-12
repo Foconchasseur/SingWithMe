@@ -46,7 +46,7 @@ fun KaraokeSimpleText(mainText: String, nextText : String, lastText : String, pr
         if (!mainText.isEmpty()) {
             Cursor(
                 modifier = Modifier.align(Alignment.Center),
-                textPosition, textWidth.dp,textHeight.dp, progress, fontsize.value.dp
+                textPosition, textWidth.pxToDp(),textHeight.pxToDp(), progress, fontsize.value.dp
             )
         }
         Text(mainText,

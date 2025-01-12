@@ -7,6 +7,7 @@ import com.example.singwithme.objects.Constants
 import com.example.singwithme.data.models.Song
 import com.example.singwithme.objects.Playlist
 import com.example.singwithme.objects.Playlist.songs
+import com.example.singwithme.viewmodel.ErrorViewModel
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -30,17 +31,17 @@ class PlaylistRepository(private val context: Context) {
         }
     }
 
-    suspend fun downloadPlaylist() {
+    suspend fun downloadPlaylist(errorViewModel: ErrorViewModel) {
         if (!cacheFile.exists()) {
             Log.d("MusicRepository", "Downloading playlist")
-            firstDownloadPlaylist()
+            firstDownloadPlaylist(errorViewModel)
         } else {
             Log.d("MusicRepository", "Updating playlist")
-            updatePlaylist()
+            updatePlaylist(errorViewModel)
         }
     }
 
-    private suspend fun firstDownloadPlaylist() {
+    private suspend fun firstDownloadPlaylist(errorViewModel: ErrorViewModel) {
         return withContext(Dispatchers.IO) {
             try {
                 val client = OkHttpClient()
@@ -55,15 +56,17 @@ class PlaylistRepository(private val context: Context) {
                     // Désérialiser et retourner la liste des musiques
                     deserializeMusicData(json)
                 } else {
+                    errorViewModel.showError("Failed to download music data")
                     Log.e("MusicRepository", "Failed to download music data")
                 }
             } catch (e: Exception) {
+                errorViewModel.showError("Error downloading music data")
                 Log.e("MusicRepository", "Error downloading music data", e)
             }
         }
     }
 
-    private suspend fun updatePlaylist(){
+    private suspend fun updatePlaylist(errorViewModel: ErrorViewModel){
         return withContext(Dispatchers.IO) {
             try {
                 val client = OkHttpClient()
@@ -86,9 +89,11 @@ class PlaylistRepository(private val context: Context) {
                     savePlaylistToCache(updatedJson)
                 } else {
                     Log.e("MusicRepository", "Failed to download music data")
+                    errorViewModel.showError("Failed to download music data")
                 }
             } catch (e: Exception) {
                 Log.e("MusicRepository", "Error downloading music data", e)
+                errorViewModel.showError("Error downloading music data")
             }
         }
     }
@@ -122,6 +127,7 @@ class PlaylistRepository(private val context: Context) {
      * Transforme un tableau JSON en un autre tableau JSON pour correspondre à la structure de données que l'on souhaite utiliser
      */
     fun transformJsonArray(input: String): String {
+        //TODO: Peut être gérer les erreurs ici aussi
         val originalArray = JSONArray(input)
         val transformedArray = JSONArray()
 

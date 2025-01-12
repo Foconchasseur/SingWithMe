@@ -22,15 +22,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.singwithme.data.models.ID
 import com.example.singwithme.data.models.Song
+import com.example.singwithme.viewmodel.ErrorViewModel
 
 @Composable
 fun SongCard(
     song: Song,
     onCardClick: (Song) -> Unit = {},
-    downloadFunction: (ID) -> Unit,
+    downloadFunction: (ID, ErrorViewModel) -> Unit,
     setPlayingTrue: (Boolean) -> Unit,
     deleteFiles: (Context, String, ID) -> Unit,
-    navController: NavController
+    navController: NavController,
+    errorViewModel: ErrorViewModel
 ) {
     val currentContext = LocalContext.current
     val backgroundColor = if (song.locked) {
@@ -61,7 +63,7 @@ fun SongCard(
                 Button(
                     onClick = {
                         Log.d("Button Download", "Le bouton a ete appuyé sur la musique "+ song.id.name)
-                        song.id?.let { downloadFunction(it) }
+                        song.id?.let { downloadFunction(it, errorViewModel) }
                     },
                     modifier = Modifier
                 ) {

@@ -12,9 +12,9 @@ import java.io.File
 class DownloadViewModel (private val context: Context) : ViewModel(){
     private val taskManager = TaskManager(context)
 
-    fun downloadAndSerializeSong(id: ID) {
+    fun downloadAndSerializeSong(id: ID, errorViewModel: ErrorViewModel) {
         viewModelScope.launch {
-            taskManager.downloadAndSerializeMusic(id)
+            taskManager.downloadAndSerializeMusic(id, errorViewModel)
         }
     }
 

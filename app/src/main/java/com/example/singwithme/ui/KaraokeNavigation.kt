@@ -65,9 +65,10 @@ fun KaraokeNavigation(
                     downloadPlaylist =
                     {
                         coroutineScope.launch {
-                            playlistRepository.downloadPlaylist()
+                            playlistRepository.downloadPlaylist(errorViewModel)
                         }
-                    }
+                    },
+                    errorViewModel = errorViewModel
 
                 )
 

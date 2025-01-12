@@ -3,8 +3,10 @@ package com.example.singwithme.worker
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.example.singwithme.objects.Constants
+import com.example.singwithme.viewmodel.ErrorViewModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -43,11 +45,18 @@ class WorkerDownloadMp3 (context: Context, params: WorkerParameters) : Coroutine
                 return Result.success()
             } else {
                 Log.e("DownloadMp3Worker", "Échec du téléchargement. Code HTTP : ${response.code}")
-                return Result.failure()
+                val errorData = Data.Builder()
+                    .putString("error", "Il y a eu une erreur lors du téléchargement du fichier .MP3. " +
+                            "Code HTTP : \n ${response.code}")
+                    .build()
+                return Result.failure(errorData)
             }
         } catch (e: Exception) {
             Log.e("DownloadMp3Worker", "Erreur pendant le téléchargement : ${e.message}")
-            return Result.failure()
+            val errorData = Data.Builder()
+                .putString("error", "Il y a eu une erreur lors du téléchargement du fichier .MP3")
+                .build()
+            return Result.failure(errorData)
         }
     }
 }
