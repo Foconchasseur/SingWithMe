@@ -24,9 +24,8 @@ import kotlin.math.roundToInt
 fun KaraokeSlider(modifier: Modifier, karaokeViewModel: KaraokeViewModel, duration: Float){
     var sliderPosition by remember { mutableFloatStateOf(0f) }
     sliderPosition = karaokeViewModel.getCurrentPosition()?.toFloat() ?: 0f
-    if (sliderPosition != 0f) {
-        sliderPosition /= 1000
-    }
+    Log.d("sliderPosition", sliderPosition.toString())
+    Log.d("currentPosition", karaokeViewModel.getCurrentPosition().toString())
     Column {
         Slider(
             modifier = modifier
@@ -36,17 +35,17 @@ fun KaraokeSlider(modifier: Modifier, karaokeViewModel: KaraokeViewModel, durati
             onValueChange = {
                 sliderPosition = it
                 Log.d("sliderPosition", sliderPosition.toString())
-                karaokeViewModel.setCurrentPosition((sliderPosition * 1000).toLong())
+                karaokeViewModel.setCurrentPosition(sliderPosition.toLong())
                             },
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.secondary,
                 activeTrackColor = MaterialTheme.colorScheme.secondary,
                 inactiveTrackColor = MaterialTheme.colorScheme.secondaryContainer,
             ),
-            steps = duration.toInt(),
-            valueRange = 0f..duration
+            steps = duration.toInt() ,
+            valueRange = 0f..duration * 1000
         )
-        Text(text = "${(sliderPosition / 60).toInt()}m:${(sliderPosition % 60).toInt().toString().padStart(2, '0')}s",
+        Text(text = "${(sliderPosition / 60000).toInt()}m:${(sliderPosition / 1000  % 60).toInt().toString().padStart(2, '0')}s",
             fontSize = 40.sp)
     }
 }
