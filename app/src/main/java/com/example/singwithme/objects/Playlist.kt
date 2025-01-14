@@ -1,5 +1,6 @@
 package com.example.singwithme.objects
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.example.singwithme.data.models.ID
@@ -16,20 +17,28 @@ object Playlist {
         return songs.find { it.id == id }
     }
 
-    fun updateDownloadedById(id: ID, update: Boolean, savedFile: Boolean) {
+    fun updateDownloadedById(id: ID, update: Boolean, savedFile: Boolean, songsList: MutableState<List<Song>>) {
         val songIndex = songs.indexOfFirst { it.id == id }
+        val songListIndex = songsList.value.indexOfFirst { it.id == id }
         if (songIndex != -1) { // Vérifie si l'index existe
             songs[songIndex] = songs[songIndex].copy(downloaded = update)
+            var songList = songsList.value.toMutableList()
+            songList[songListIndex] = songList[songListIndex].copy(downloaded = update)
+            songsList.value = songList
         }
         if (savedFile) {
             saveMusicDataToCache(cacheFile)
         }
     }
 
-    fun updateLockedById(id: ID, update: Boolean, savedFile: Boolean) {
+    fun updateLockedById(id: ID, update: Boolean, savedFile: Boolean, songsList: MutableState<List<Song>>) {
         val songIndex = songs.indexOfFirst { it.id == id }
         if (songIndex != -1) { // Vérifie si l'index existe
             songs[songIndex] = songs[songIndex].copy(locked = update)
+            var songList = songsList.value.toMutableList()
+            val songListIndex = songsList.value.indexOfFirst { it.id == id }
+            songList[songListIndex] = songList[songListIndex].copy(locked = update)
+            songsList.value = songList
         }
         if (savedFile) {
             saveMusicDataToCache(cacheFile)

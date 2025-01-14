@@ -27,6 +27,7 @@ import com.example.singwithme.ui.components.LaunchScreen
 import com.example.singwithme.ui.screens.PlaybackScreenContent
 import com.example.singwithme.viewmodel.DownloadViewModel
 import com.example.singwithme.viewmodel.ErrorViewModel
+import com.example.singwithme.viewmodel.FilterViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -44,32 +45,35 @@ fun KaraokeNavigation(
         quitApplication(karaokeViewModel, context = currentContext)
     }
     val coroutineScope = rememberCoroutineScope() // Scope de coroutine associé au composable
-
+    val filterViewModel = FilterViewModel()
     NavHost(
         navController = navController,
         startDestination = "menu" // Écran de démarrage
     ) {
 
         composable("menu") {
+            val filteredItems = Playlist.songs.toList().filter { song ->
+                song.id.artist.contains(filterViewModel.getFilter(), ignoreCase = true) || song.id.name.contains(filterViewModel.text, ignoreCase = true)
+            }
             ErrorDisplay(
                 errorViewModel
             )
             Log.d("Menu","Affichage du menu")
                 MenuScreen(
                     navController = navController,
-                    playlist = playlist,
+                    playlist = filteredItems,
                     downloadFunction = downloadViewModel::downloadAndSerializeSong,
                     setPlayingTrue = karaokeViewModel::setPlaying,
                     deleteFiles = downloadViewModel::deleteDownloadedFiles,
                     quitApplication = quitApplication,
                     downloadPlaylist =
-                    {
+                    { songs ->
                         coroutineScope.launch {
-                            playlistRepository.downloadPlaylist(errorViewModel)
+                            playlistRepository.downloadPlaylist(errorViewModel,songs)
                         }
                     },
-                    errorViewModel = errorViewModel
-
+                    errorViewModel = errorViewModel,
+                    filterViewModel = filterViewModel
                 )
 
         }

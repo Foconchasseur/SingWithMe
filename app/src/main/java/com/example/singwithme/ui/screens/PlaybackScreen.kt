@@ -32,6 +32,7 @@ import com.example.singwithme.objects.CurrentMusicData
 import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.Cursor
 import com.example.singwithme.ui.components.KaraokeSimpleText
+import com.example.singwithme.ui.components.KaraokeSlider
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import kotlinx.coroutines.Job
@@ -60,13 +61,13 @@ fun PlaybackScreen(
     var currentLyric by remember { mutableStateOf<LyricsLine?>(null) }
     var progress by remember { mutableStateOf(0f) }
     var isRunning by remember { mutableStateOf(true) } // Contrôle du LaunchedEffect
-
-
+    val duration = lyrics.last().startTime
     // Synchronisation de l'audio et des paroles
     LaunchedEffect(isRunning) {
         Log.d("LaucnhedEffect","boucle")
         while (isRunning) {
-            val currentPosition = karaokeViewModel.getCurrentPosition()?.div(1000f) // En secondes
+            val currentPosition = karaokeViewModel.getCurrentPosition()?.div(1000f) // En seconde
+            //Log.d("CurrentPosition", "Current position: $currentPosition")
             if (currentPosition != null) {
                 if (currentLyric != null && currentPosition >= currentLyric!!.endTime) {
                     currentLyricCount = lyrics.indexOf(currentLyric) + 1
@@ -104,6 +105,7 @@ fun PlaybackScreen(
                 .fillMaxWidth() // Le texte occupe toute la largeur,
 
         )
+        KaraokeSlider(Modifier.align(Alignment.TopCenter), karaokeViewModel, duration)
         Row(
             modifier = Modifier
                 .fillMaxWidth()

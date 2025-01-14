@@ -26,7 +26,6 @@ fun Cursor(
     fontsize: Dp
 
 ) {
-    Log.d("textWidth", textWidth.toString())
     Box(
         modifier = modifier
             .offset(

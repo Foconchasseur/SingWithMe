@@ -3,6 +3,7 @@ package com.example.singwithme.worker
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -10,6 +11,7 @@ import androidx.work.await
 import androidx.work.workDataOf
 import com.example.singwithme.back.WorkerDownloadAndSerialize
 import com.example.singwithme.data.models.ID
+import com.example.singwithme.data.models.Song
 import com.example.singwithme.objects.Playlist
 import com.example.singwithme.viewmodel.ErrorViewModel
 
@@ -27,13 +29,14 @@ class TaskManager (private val context: Context){
     @SuppressLint("RestrictedApi")
     suspend fun downloadAndSerializeMusic(
         id: ID,
-        errorViewModel: ErrorViewModel
+        errorViewModel: ErrorViewModel,
+        songList : MutableState<List<Song>>
     ) {
         // On passe par un try/catch pour gérer les exceptions
         try {
             // Récupérer le chemin de la musique
             val songPath = Playlist.getSongById(id)?.path?.substringBefore(".");
-            Playlist.updateLockedById(id,true, false);
+            Playlist.updateLockedById(id,true, false, songList);
             Log.d("Début download", "Démarrage du téléchargement de"+songPath)
             // Créer une chaîne de workers
             val downloadLyricsRequest = OneTimeWorkRequestBuilder<WorkerDownloadAndSerialize>()
@@ -61,31 +64,27 @@ class TaskManager (private val context: Context){
                     workManager.getWorkInfoByIdLiveData(downloadMp3Request.id).observeForever { secondWorkInfo ->
                         if (secondWorkInfo.state == WorkInfo.State.SUCCEEDED) {
                             Log.d("Test", "Tous les travaux ont réussi")
-                            Playlist.updateLockedById(id, false, true)
-                            Playlist.updateDownloadedById(id, true, true)
+                            Playlist.updateLockedById(id, false, true, songList)
+                            Playlist.updateDownloadedById(id, true, true, songList)
                         } else if ((secondWorkInfo.state == WorkInfo.State.FAILED)) {
-                            //TODO : Gérer l'erreur
                             Log.d("Test", "Un ou plusieurs travaux ont échoué ou ont été annulés. État : ${secondWorkInfo.state}")
                             // Si le deuxième Worker à echoué, on affiche l'erreur
                             workInfo.outputData.getString("error")?.let { errorViewModel.showError(it) }
                             // Et on annule le téléchargement
-                            Playlist.updateLockedById(id, false, true)
-                            Playlist.updateDownloadedById(id, false, true)
+                            Playlist.updateLockedById(id, false, true, songList)
+                            Playlist.updateDownloadedById(id, false, true, songList)
                         }
                     }
                 } else if ((workInfo.state == WorkInfo.State.FAILED)) {
-                    //TODO : Gérer l'erreur
                     Log.d("Test", "Le premier travail a échoué. État : ${workInfo.state}")
                     // Si le premier Worker à echoué, on affiche l'erreur
                     workInfo.outputData.getString("error")?.let { errorViewModel.showError(it) }
                     // Et on annule le téléchargement
-                    Playlist.updateLockedById(id, false, true)
-                    Playlist.updateDownloadedById(id, false, true)
+                    Playlist.updateLockedById(id, false, true, songList)
+                    Playlist.updateDownloadedById(id, false, true, songList)
                 }
             }
         } catch (e: Exception) {
-            //TODO : Gérer l'erreur
-            // Si une exception est levée, on affiche l'erreur
             e.printStackTrace()
         }
     }

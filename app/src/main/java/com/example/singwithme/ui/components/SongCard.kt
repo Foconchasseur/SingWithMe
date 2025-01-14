@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,12 +28,12 @@ import com.example.singwithme.viewmodel.ErrorViewModel
 @Composable
 fun SongCard(
     song: Song,
-    onCardClick: (Song) -> Unit = {},
-    downloadFunction: (ID, ErrorViewModel) -> Unit,
+    downloadFunction: (ID, ErrorViewModel, MutableState<List<Song>>) -> Unit,
     setPlayingTrue: (Boolean) -> Unit,
-    deleteFiles: (Context, String, ID) -> Unit,
+    deleteFiles: (Context, String, ID, MutableState<List<Song>>) -> Unit,
     navController: NavController,
-    errorViewModel: ErrorViewModel
+    errorViewModel: ErrorViewModel,
+    songList : MutableState<List<Song>>
 ) {
     val currentContext = LocalContext.current
     val backgroundColor = if (song.locked) {
@@ -63,7 +64,7 @@ fun SongCard(
                 Button(
                     onClick = {
                         Log.d("Button Download", "Le bouton a ete appuyé sur la musique "+ song.id.name)
-                        song.id?.let { downloadFunction(it, errorViewModel) }
+                        song.id?.let { downloadFunction(it, errorViewModel, songList) }
                     },
                     modifier = Modifier
                 ) {
@@ -79,7 +80,7 @@ fun SongCard(
                     contentDescription = "Delete",
                     onClick = {
                         val fileName = song.path.substringBefore(".").replace("/","_")
-                        song.id?.let { deleteFiles(currentContext,fileName, it) }
+                        song.id?.let { deleteFiles(currentContext,fileName, it, songList) }
                     }
                 )
                 ActionButton(

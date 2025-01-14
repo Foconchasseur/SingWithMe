@@ -9,25 +9,30 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.singwithme.data.models.ID
 import com.example.singwithme.data.models.Song
+import com.example.singwithme.objects.Playlist
 import com.example.singwithme.viewmodel.ErrorViewModel
+import com.example.singwithme.viewmodel.FilterViewModel
 
 
 @Composable
 fun SongGridCard(
-    playlist : List<Song>,
     modifier: Modifier = Modifier,
-    downloadFunction: (ID, ErrorViewModel) -> Unit,
+    downloadFunction: (ID, ErrorViewModel, MutableState<List<Song>>) -> Unit,
     setPlayingTrue: (Boolean) -> Unit,
-    deleteFiles: (Context, String, ID) -> Unit,
+    deleteFiles: (Context, String, ID, MutableState<List<Song>>) -> Unit,
     navController: NavController,
-    errorViewModel: ErrorViewModel
+    errorViewModel: ErrorViewModel,
+    songList: MutableState<List<Song>>
 ) {
-    Log.d("playlist", playlist.toString())
+
     LazyVerticalGrid(
         horizontalArrangement = Arrangement.Center,
         verticalArrangement = Arrangement.Top,
@@ -36,14 +41,15 @@ fun SongGridCard(
         state = rememberLazyGridState()
     ) {
 
-        items(playlist) { item ->
+        items(songList.value) { item ->
             SongCard(
                 item,
                 downloadFunction = downloadFunction,
                 navController = navController,
                 setPlayingTrue = setPlayingTrue,
                 deleteFiles = deleteFiles,
-                errorViewModel = errorViewModel
+                errorViewModel = errorViewModel,
+                songList =  songList
                 )
         }
     }

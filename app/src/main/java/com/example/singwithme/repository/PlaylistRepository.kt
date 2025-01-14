@@ -2,11 +2,10 @@ package com.example.singwithme.repository
 
 import android.content.Context
 import android.util.Log
-import com.example.singwithme.data.models.ID
+import androidx.compose.runtime.MutableState
 import com.example.singwithme.objects.Constants
 import com.example.singwithme.data.models.Song
 import com.example.singwithme.objects.Playlist
-import com.example.singwithme.objects.Playlist.songs
 import com.example.singwithme.viewmodel.ErrorViewModel
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -31,17 +30,17 @@ class PlaylistRepository(private val context: Context) {
         }
     }
 
-    suspend fun downloadPlaylist(errorViewModel: ErrorViewModel) {
+    suspend fun downloadPlaylist(errorViewModel: ErrorViewModel, songsList: MutableState<List<Song>>) {
         if (!cacheFile.exists()) {
             Log.d("MusicRepository", "Downloading playlist")
-            firstDownloadPlaylist(errorViewModel)
+            firstDownloadPlaylist(errorViewModel,songsList)
         } else {
             Log.d("MusicRepository", "Updating playlist")
             updatePlaylist(errorViewModel)
         }
     }
 
-    private suspend fun firstDownloadPlaylist(errorViewModel: ErrorViewModel) {
+    private suspend fun firstDownloadPlaylist(errorViewModel: ErrorViewModel, songsList: MutableState<List<Song>>) {
         return withContext(Dispatchers.IO) {
             try {
                 val client = OkHttpClient()
@@ -54,7 +53,7 @@ class PlaylistRepository(private val context: Context) {
                     // Sauvegarder le fichier dans le cache
                     savePlaylistToCache(json)
                     // Désérialiser et retourner la liste des musiques
-                    deserializeMusicData(json)
+                    deserializeMusicData(json, songsList)
                 } else {
                     errorViewModel.showError("Failed to download music data")
                     Log.e("MusicRepository", "Failed to download music data")
@@ -100,16 +99,21 @@ class PlaylistRepository(private val context: Context) {
     fun readMusicDataFromCache() {
         cacheFile.inputStream().use { inputStream ->
             val json = inputStream.bufferedReader().use { it.readText() }
-            return deserializeMusicData(json)
+            return deserializeMusicData(json, null)
         }
     }
 
     // Désérialiser le JSON en une liste d'objets Song
-    private fun deserializeMusicData(json: String) {
+    private fun deserializeMusicData(json: String, songsList: MutableState<List<Song>>?) {
         val type = object : TypeToken<List<Song>>() {}.type
         val songs = Gson().fromJson<List<Song>>(json, type)
         Playlist.songs.clear()
         Playlist.songs.addAll(songs)
+        if (songs != null) {
+            if (songsList != null) {
+                songsList.value = Playlist.songs.toList()
+            }
+        }
     }
 
     // Sauvegarder les données téléchargées dans le cache

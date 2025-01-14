@@ -26,6 +26,8 @@ class KaraokeViewModel() : ViewModel() {
     // LiveData to observe the playback state
     private var isPlaying = true;
 
+    private var duration = 0L;
+
     fun initializePlayer(context: Context, uri: Uri) {
         exoPlayer?.release() // Libérer l'ancienne instance si elle existe
         exoPlayer = ExoPlayer.Builder(context).build()
@@ -65,6 +67,19 @@ class KaraokeViewModel() : ViewModel() {
 
     fun getCurrentPosition(): Long? {
         return exoPlayer?.currentPosition
+    }
+
+    fun setCurrentPosition(position: Long) {
+        exoPlayer?.seekTo(position)
+    }
+
+    fun getMusicLength(): Long {
+        duration = exoPlayer?.duration ?: 0
+        return if (duration<=0){
+            0
+        } else {
+            return duration.div(1000)
+        }
     }
 
     fun reset() {
