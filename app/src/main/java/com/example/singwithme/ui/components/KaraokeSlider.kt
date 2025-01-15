@@ -24,8 +24,8 @@ import kotlin.math.roundToInt
 fun KaraokeSlider(modifier: Modifier, karaokeViewModel: KaraokeViewModel, duration: Float){
     var sliderPosition by remember { mutableFloatStateOf(0f) }
     sliderPosition = karaokeViewModel.getCurrentPosition()?.toFloat() ?: 0f
-    Log.d("sliderPosition", sliderPosition.toString())
-    Log.d("currentPosition", karaokeViewModel.getCurrentPosition().toString())
+    //Log.d("sliderPosition", sliderPosition.toString())
+    //Log.d("currentPosition", karaokeViewModel.getCurrentPosition().toString())
     Column {
         Slider(
             modifier = modifier

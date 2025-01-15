@@ -33,13 +33,13 @@ import java.io.File
 
 @Composable
 fun KaraokeNavigation(
-    playlistRepository: PlaylistRepository
+    playlistRepository: PlaylistRepository,
+    karaokeViewModel: KaraokeViewModel
 ) {
     val errorViewModel = ErrorViewModel()
     val currentContext = LocalContext.current
     val playlist = Playlist.songs
     val navController = rememberNavController()
-    val karaokeViewModel = KaraokeViewModel()
     val downloadViewModel = DownloadViewModel(currentContext)
     val quitApplication: () -> Unit = {
         quitApplication(karaokeViewModel, context = currentContext)
