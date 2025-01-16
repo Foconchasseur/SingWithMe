@@ -19,7 +19,6 @@ fun ActionButton(
     contentDescription: String,
     onClick:  () -> Unit,
     modifier: Modifier = Modifier,
-    tint: Color = Color.Black,
     size: Dp = 48.dp
 ) {
     IconButton(
@@ -27,9 +26,8 @@ fun ActionButton(
         modifier = modifier
     ) {
         Icon(
-            imageVector = icon,
+            icon,
             contentDescription = contentDescription,
-            tint = tint,
             modifier = Modifier.size(size)
         )
     }

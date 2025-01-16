@@ -80,7 +80,6 @@ fun KaraokeSimpleTextPreview() {
 fun ActionButtonPreview() {
     ActionButton(
         icon = Icons.Default.Home,
-        tint = Color.Black,
         contentDescription = "Pause",
         onClick = { /* Action preview */ }
     )

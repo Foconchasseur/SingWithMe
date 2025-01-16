@@ -4,7 +4,10 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -49,51 +52,80 @@ fun SongCard(
             .background(color = backgroundColor)
             .padding(16.dp)
     ) {
-        Text(
-            text = song.id.artist,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.weight(1f)
-        )
-        Text(
-            text = song.id.name,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(2f)
-        )
-        if (!song.locked) {
-            if (!song.downloaded) {
-                Button(
-                    onClick = {
-                        Log.d("Button Download", "Le bouton a ete appuyé sur la musique "+ song.id.name)
-                        song.id?.let { downloadFunction(it, errorViewModel, songList) }
-                    },
-                    modifier = Modifier
-                ) {
-                    Text(text = if (song.locked) "Téléchargement en cours..." else "Télécharger")
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Download Icon"
-                    )
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .weight(0.2f)
+        ){
+            Text(
+                text = song.id.artist,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        }
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .weight(0.5f)
+        ){
+            Text(
+                text = song.id.name,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .weight(0.3f) // 70% de la largeur*
+        ){
+
+            if (!song.locked) {
+                if (!song.downloaded) {
+                    Box(
+                        modifier = Modifier.align(Alignment.CenterEnd)
+                    ){
+                        Button(
+                            onClick = {
+                                Log.d("Button Download", "Le bouton a ete appuyé sur la musique "+ song.id.name)
+                                song.id?.let { downloadFunction(it, errorViewModel, songList) }
+                            },
+                            modifier = Modifier
+                        ) {
+                            Text("Télécharger")
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Download Icon"
+                            )
+                        }
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        ActionButton(
+                            icon = Icons.Default.Delete, // Bouton lecture
+                            contentDescription = "Delete",
+                            onClick = {
+                                val fileName = song.path.substringBefore(".").replace("/","_")
+                                song.id?.let { deleteFiles(currentContext,fileName, it, songList) }
+                            }
+                        )
+                        ActionButton(
+                            icon = Icons.Default.PlayArrow, // Bouton lecture
+                            contentDescription = "Play",
+                            onClick = {
+                                setPlayingTrue(true)
+                                val fileName = song.path.substringBefore(".").replace("/","_")
+                                navController.navigate("playback/$fileName")
+                            }
+                        )
+                    }
+
                 }
-            } else {
-                ActionButton(
-                    icon = Icons.Default.Delete, // Bouton lecture
-                    contentDescription = "Delete",
-                    onClick = {
-                        val fileName = song.path.substringBefore(".").replace("/","_")
-                        song.id?.let { deleteFiles(currentContext,fileName, it, songList) }
-                    }
-                )
-                ActionButton(
-                    icon = Icons.Default.PlayArrow, // Bouton lecture
-                    contentDescription = "Play",
-                    onClick = {
-                        setPlayingTrue(true)
-                        val fileName = song.path.substringBefore(".").replace("/","_")
-                        navController.navigate("playback/$fileName")
-                    }
-                )
             }
         }
+
     }
 }
 

@@ -28,6 +28,9 @@ class KaraokeViewModel() : ViewModel() {
 
     private var duration = 0L;
 
+    fun getIsPlaying(): Boolean{
+        return isPlaying
+    }
     fun initializePlayer(context: Context, uri: Uri) {
         exoPlayer?.release() // Libérer l'ancienne instance si elle existe
         exoPlayer = ExoPlayer.Builder(context).build()

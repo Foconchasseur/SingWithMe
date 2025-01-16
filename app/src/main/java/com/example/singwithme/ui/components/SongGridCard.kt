@@ -37,7 +37,7 @@ fun SongGridCard(
         horizontalArrangement = Arrangement.Center,
         verticalArrangement = Arrangement.Top,
         columns = GridCells.Fixed(1),
-        modifier = modifier.height(300.dp),
+        modifier = modifier,
         state = rememberLazyGridState()
     ) {
 

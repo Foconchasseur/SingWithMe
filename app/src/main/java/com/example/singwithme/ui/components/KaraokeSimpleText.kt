@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,10 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.singwithme.ui.pxToDp
 import kotlin.math.roundToInt
 
-@Composable
-fun Int.pxToDp() = with(LocalDensity.current) { this@pxToDp.toDp() }
 
 
 @Composable
@@ -46,7 +46,7 @@ fun KaraokeSimpleText(mainText: String, nextText : String, lastText : String, pr
         if (!mainText.isEmpty()) {
             Cursor(
                 modifier = Modifier.align(Alignment.Center),
-                textPosition, textWidth.pxToDp(),textHeight.pxToDp(), progress, fontsize.value.dp
+                textPosition, textWidth.pxToDp(), progress, fontsize.value.dp
             )
         }
         Text(mainText,
@@ -61,7 +61,7 @@ fun KaraokeSimpleText(mainText: String, nextText : String, lastText : String, pr
                     val position = coordinates.positionInParent()
                     textPosition = position
                 }
-            , color= Color.Red)
+        )
         Text(
             nextText,
             fontSize = littleFontsize,
@@ -69,7 +69,7 @@ fun KaraokeSimpleText(mainText: String, nextText : String, lastText : String, pr
             modifier = Modifier
                 .offset(y = (textPosition.y - textHeight).dp)
                 .align(Alignment.Center),
-            color = Color.Black
+            color = MaterialTheme.colorScheme.tertiary
         )
         Text(
             lastText,
@@ -77,7 +77,6 @@ fun KaraokeSimpleText(mainText: String, nextText : String, lastText : String, pr
             modifier = Modifier
                 .offset(y = (textPosition.y + textHeight).dp)
                 .align(Alignment.Center),
-            color = Color.Red
         )
         Text(mainText,
             fontSize = fontsize,
@@ -85,7 +84,8 @@ fun KaraokeSimpleText(mainText: String, nextText : String, lastText : String, pr
             modifier = Modifier
                 .offset { IntOffset(textPosition.x.roundToInt(), textPosition.y.roundToInt()) }
                 //.align(Alignment.CenterStart)
-                .size(width = textWidth.pxToDp() * progress, height = textHeight.pxToDp())
+                .size(width = textWidth.pxToDp() * progress, height = textHeight.pxToDp()),
+            color = MaterialTheme.colorScheme.tertiary
 
         )
     }

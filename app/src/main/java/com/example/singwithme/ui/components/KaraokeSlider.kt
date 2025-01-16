@@ -23,7 +23,9 @@ import kotlin.math.roundToInt
 @Composable
 fun KaraokeSlider(modifier: Modifier, karaokeViewModel: KaraokeViewModel, duration: Float){
     var sliderPosition by remember { mutableFloatStateOf(0f) }
-    sliderPosition = karaokeViewModel.getCurrentPosition()?.toFloat() ?: 0f
+    if(karaokeViewModel.getIsPlaying()){
+        sliderPosition = karaokeViewModel.getCurrentPosition()?.toFloat() ?: 0f
+    }
     //Log.d("sliderPosition", sliderPosition.toString())
     //Log.d("currentPosition", karaokeViewModel.getCurrentPosition().toString())
     Column {
@@ -32,11 +34,17 @@ fun KaraokeSlider(modifier: Modifier, karaokeViewModel: KaraokeViewModel, durati
                 .width(600.dp)
                 .padding(40.dp),
             value = sliderPosition,
+
             onValueChange = {
+                if (karaokeViewModel.getIsPlaying()){
+                    karaokeViewModel.pause()
+                }
                 sliderPosition = it
-                Log.d("sliderPosition", sliderPosition.toString())
-                karaokeViewModel.setCurrentPosition(sliderPosition.toLong())
                             },
+            onValueChangeFinished = {
+                karaokeViewModel.setCurrentPosition(sliderPosition.toLong())
+                karaokeViewModel.pause()
+            },
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.secondary,
                 activeTrackColor = MaterialTheme.colorScheme.secondary,

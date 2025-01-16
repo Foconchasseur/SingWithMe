@@ -13,15 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-@Composable
-fun Float.pxToDp() = with(LocalDensity.current) { this@pxToDp.toDp() }
 
 @Composable
 fun Cursor(
     modifier: Modifier,
     textPosition: Offset,
     textWidth: Dp,
-    textHeight: Dp,
     progress: Float,
     fontsize: Dp
 
