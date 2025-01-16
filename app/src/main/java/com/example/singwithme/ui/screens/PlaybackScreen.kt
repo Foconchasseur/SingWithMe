@@ -6,9 +6,12 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -33,6 +36,7 @@ import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.Cursor
 import com.example.singwithme.ui.components.KaraokeSimpleText
 import com.example.singwithme.ui.components.KaraokeSlider
+import com.example.singwithme.ui.pxToDp
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import kotlinx.coroutines.Job
@@ -64,7 +68,7 @@ fun PlaybackScreen(
     val duration = lyrics.last().startTime
     // Synchronisation de l'audio et des paroles
     LaunchedEffect(isRunning) {
-        Log.d("LaucnhedEffect","boucle")
+        Log.d("LaucnhedEffect", "boucle")
         while (isRunning) {
             val currentPosition = karaokeViewModel.getCurrentPosition()?.div(1000f) // En seconde
             //Log.d("CurrentPosition", "Current position: $currentPosition")
@@ -73,7 +77,8 @@ fun PlaybackScreen(
                     currentLyricCount = lyrics.indexOf(currentLyric) + 1
                 }
             }
-            val lyric = lyrics.find { it.startTime <= currentPosition!! && it.endTime > currentPosition }
+            val lyric =
+                lyrics.find { it.startTime <= currentPosition!! && it.endTime > currentPosition }
 
             //Log.d("Lyric", "Current lyric: $lyric")
 
@@ -89,58 +94,81 @@ fun PlaybackScreen(
             // Si on dépasse la fin de la ligne, on passe à la suivante
 
             //Log.d("LyricCount", "Current lyric count: $currentLyricCount")
-            delay(50L   ) // Vérifier toutes les 100ms
+            delay(50L) // Vérifier toutes les 100ms
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-
-        KaraokeSimpleText(
-            mainText = lyrics.getOrNull(currentLyricCount)?.text ?: "",
-            lastText = lyrics.getOrNull(currentLyricCount + 1)?.text ?: "",
-            nextText = lyrics.getOrNull(currentLyricCount - 1)?.text ?: "",
-            progress = progress,
-            modifier = Modifier
-                .align(Alignment.CenterStart) // Centre le texte à la fois verticalement
-                .fillMaxWidth() // Le texte occupe toute la largeur,
-
-        )
-        KaraokeSlider(Modifier.align(Alignment.TopCenter), karaokeViewModel, duration)
-        Row(
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        val screenHeight = constraints.maxHeight
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(10.dp)
-                .padding(top = 5.dp)
-            ,
-                horizontalArrangement = Arrangement.SpaceEvenly
+                .fillMaxHeight(0.70f)
         ) {
-            ActionButton(
-                icon = Icons.Default.Menu,
-                contentDescription = "Menu",
-                onClick = {
-                    karaokeViewModel.stop()
-                    onMenuClick()
-                }
-            )
-            ActionButton(
-                icon = Icons.Default.PlayArrow,
-                contentDescription = "Pause",
-                onClick = {
-                    karaokeViewModel.pause()
-                }
-            )
-            ActionButton(
-                icon = Icons.Default.Refresh,
-                contentDescription = "Restart",
-                onClick = {
-                    progress = 0f
-                    currentLyricCount = 0
-                    karaokeViewModel.reset()
-                }
+            KaraokeSimpleText(
+                mainText = lyrics.getOrNull(currentLyricCount)?.text ?: "",
+                lastText = lyrics.getOrNull(currentLyricCount + 1)?.text ?: "",
+                nextText = lyrics.getOrNull(currentLyricCount - 1)?.text ?: "",
+                progress = progress,
+                modifier = Modifier
+                    .align(Alignment.CenterStart) // Centre le texte à la fois verticalement
+                    .fillMaxWidth() // Le texte occupe toute la largeur,
+
             )
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.15f)
+                .offset(y = (screenHeight * 0.7f).pxToDp())
+        ) {
+            KaraokeSlider(Modifier.align(Alignment.TopCenter), karaokeViewModel, duration)
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.15f)
+                .offset(y = (screenHeight * 0.85f).pxToDp())
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(10.dp)
+                    .padding(top = 5.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ActionButton(
+                    icon = Icons.Default.Menu,
+                    contentDescription = "Menu",
+                    onClick = {
+                        karaokeViewModel.stop()
+                        onMenuClick()
+                    }
+                )
+                ActionButton(
+                    icon = Icons.Default.PlayArrow,
+                    contentDescription = "Pause",
+                    onClick = {
+                        karaokeViewModel.pause()
+                    }
+                )
+                ActionButton(
+                    icon = Icons.Default.Refresh,
+                    contentDescription = "Restart",
+                    onClick = {
+                        progress = 0f
+                        currentLyricCount = 0
+                        karaokeViewModel.reset()
+                    }
+                )
+            }
+        }
+
     }
+
 }
 
 

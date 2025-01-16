@@ -54,7 +54,6 @@ fun MenuScreen(
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize() // Remplir toute la taille de l'écran
     ) {
-        val screenWidth = constraints.maxWidth
         val screenHeight = constraints.maxHeight
         val songList = remember { mutableStateOf(Playlist.songs.toList()) }
         if (Playlist.songs.isEmpty()) {
