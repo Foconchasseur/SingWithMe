@@ -103,7 +103,7 @@ class WorkerDownloadAndSerialize(
         }
 
         if (lyrics[0].startTime != 0.0f) {
-            lyrics.add(0, LyricsLine("...", 0.0f, lyrics[0].startTime))
+            lyrics.add(0, LyricsLine("", 0.0f, lyrics[0].startTime))
         }
 
         return SongData(title, artist, lyrics, track)

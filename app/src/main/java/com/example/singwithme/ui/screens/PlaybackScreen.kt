@@ -74,28 +74,15 @@ fun PlaybackScreen(
         while (isRunning) {
             val currentPosition = karaokeViewModel.getCurrentPosition()?.div(1000f) // En seconde
             //Log.d("CurrentPosition", "Current position: $currentPosition")
-            if (currentPosition != null) {
-                if (currentLyric != null && currentPosition >= currentLyric!!.endTime) {
-                    currentLyricCount = lyrics.indexOf(currentLyric) + 1
-                }
-            }
-            val lyric =
+            Log.d("currentLyricCount", "currentLyricCount : $currentLyricCount")
+            currentLyric =
                 lyrics.find { it.startTime <= currentPosition!! && it.endTime > currentPosition }
-
-            //Log.d("Lyric", "Current lyric: $lyric")
-
-            currentLyric = lyric
-
-            // Si on a une ligne valide, calculer le progrès
             currentLyric?.let {
                 if (currentPosition != null) {
                     progress = (currentPosition - it.startTime) / (it.endTime - it.startTime)
                 }
             }
-            //Log.d("Progression", "Current progression: $progress")
-            // Si on dépasse la fin de la ligne, on passe à la suivante
-
-            //Log.d("LyricCount", "Current lyric count: $currentLyricCount")
+            currentLyricCount = lyrics.indexOf(currentLyric)
             delay(50L) // Vérifier toutes les 100ms
         }
     }
@@ -110,7 +97,7 @@ fun PlaybackScreen(
                 .fillMaxHeight(0.70f)
         ) {
             KaraokeSimpleText(
-                mainText = lyrics.getOrNull(currentLyricCount)?.text ?: "",
+                mainText = currentLyric?.text ?: "",
                 lastText = lyrics.getOrNull(currentLyricCount + 1)?.text ?: "",
                 nextText = lyrics.getOrNull(currentLyricCount - 1)?.text ?: "",
                 progress = progress,
