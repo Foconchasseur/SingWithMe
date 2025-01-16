@@ -31,7 +31,7 @@ fun ThemeSelector(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth(0.6f).fillMaxHeight()
     ) {
-        val themesName = listOf("clair", "sombre", "bleu") // Ajouter les noms des thèmes
+        val themesName = listOf("clair", "sombre", "bleu","japonais") // Ajouter les noms des thèmes
         // Bouton de navigation gauche
         IconButton(
             onClick = {
@@ -42,7 +42,9 @@ fun ThemeSelector(
             }},
             modifier = Modifier.weight(0.15f) // 15% de la largeur
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Theme")
+            if (currentThemeIndex != 0) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Theme")
+            }
         }
         Box(
             modifier = Modifier
@@ -60,13 +62,15 @@ fun ThemeSelector(
         // Bouton de navigation droite
         IconButton(onClick = {
             Log.d("ThemeSelector", "Current theme index: $currentThemeIndex" + " Fleche droite")
-            if (currentThemeIndex < 2) {  // Changer cette limite en fonction du nombre de thèmes
+            if (currentThemeIndex < themesName.size - 1) {  // Changer cette limite en fonction du nombre de thèmes
                 onThemeChanged(currentThemeIndex + 1)
                 Log.d("ThemeSelector", "New theme index: $currentThemeIndex" + " Fleche droite")
             }},
             modifier = Modifier.weight(0.15f)
             ){
-            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Theme")
+            if (currentThemeIndex != themesName.size - 1) {
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Theme")
+            }
         }
     }
 }

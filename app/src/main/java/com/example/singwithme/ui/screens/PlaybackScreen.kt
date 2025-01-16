@@ -73,8 +73,6 @@ fun PlaybackScreen(
         Log.d("LaucnhedEffect", "boucle")
         while (isRunning) {
             val currentPosition = karaokeViewModel.getCurrentPosition()?.div(1000f) // En seconde
-            //Log.d("CurrentPosition", "Current position: $currentPosition")
-            Log.d("currentLyricCount", "currentLyricCount : $currentLyricCount")
             currentLyric =
                 lyrics.find { it.startTime <= currentPosition!! && it.endTime > currentPosition }
             currentLyric?.let {

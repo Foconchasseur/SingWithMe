@@ -27,8 +27,6 @@ import androidx.compose.ui.platform.LocalContext
 val LightColorScheme = lightColorScheme(
     primary = LightPrimary, //Couleur des boutons et des swithcs
     secondary = LightSecondary, // Couleur du slider et des switchs
-    //surface = LightBackground, // Couleur de gridCard
-    //onSurface = LightOnBackground, // Couleur d'une card
     background = LightBackground, // Couleur du fond de l'écran
     onBackground = LightOnBackground, // Couleur du texte
     tertiary = Color(0xFFFF0000) // Couleur du texte du karaoke
@@ -48,6 +46,14 @@ val CustomColorScheme = lightColorScheme(
     background = CustomBackground,
     onBackground = CustomOnBackground,
     tertiary = Color(0xFF0000FF)
+)
+
+val JapanColorScheme = lightColorScheme(
+    primary = Color(0xFFDE3163), // Rouge clair  pour les boutons et switchs
+    secondary = Color(0xFFF3A5C6), // Rose sakura pour les sliders et switchs
+    background = Color(0xFFFFF0F5), // Rose clair pour le fond de l'écran
+    onBackground = Color(0xFF000000), // Vert classique pour le texte principal
+    tertiary = Color(0xFFFFA07A) // Rouge pour le texte du karaoké
 )
 
 
