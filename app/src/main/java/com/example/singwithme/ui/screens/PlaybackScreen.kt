@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -65,6 +66,7 @@ fun PlaybackScreen(
     var currentLyric by remember { mutableStateOf<LyricsLine?>(null) }
     var progress by remember { mutableStateOf(0f) }
     var isRunning by remember { mutableStateOf(true) } // Contrôle du LaunchedEffect
+    var paused by remember { mutableStateOf(false) }
     val duration = lyrics.last().startTime
     // Synchronisation de l'audio et des paroles
     LaunchedEffect(isRunning) {
@@ -148,13 +150,25 @@ fun PlaybackScreen(
                         onMenuClick()
                     }
                 )
-                ActionButton(
-                    icon = Icons.Default.PlayArrow,
-                    contentDescription = "Pause",
-                    onClick = {
-                        karaokeViewModel.pause()
-                    }
-                )
+                if (paused) {
+                    ActionButton(
+                        icon = Icons.Filled.PlayArrow,
+                        contentDescription = "Play",
+                        onClick = {
+                            karaokeViewModel.pause()
+                            paused = false
+                        }
+                    )
+                } else {
+                    ActionButton(
+                        icon = Icons.Filled.Pause,
+                        contentDescription = "Pause",
+                        onClick = {
+                            karaokeViewModel.pause()
+                            paused = true
+                        }
+                    )
+                }
                 ActionButton(
                     icon = Icons.Default.Refresh,
                     contentDescription = "Restart",

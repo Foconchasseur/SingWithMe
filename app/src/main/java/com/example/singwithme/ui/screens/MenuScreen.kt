@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -104,7 +105,7 @@ fun MenuScreen(
                 verticalAlignment = Alignment.CenterVertically  // Aligne verticalement les boutons
             ) {
                 ActionButton(
-                    icon = Icons.Default.Build,
+                    icon = Icons.Filled.CloudDownload,
                     contentDescription = "getPlaylist",
                     onClick = {downloadPlaylist(songList)},
 

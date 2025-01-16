@@ -22,9 +22,12 @@ object Playlist {
         val songListIndex = songsList.value.indexOfFirst { it.id == id }
         if (songIndex != -1) { // Vérifie si l'index existe
             songs[songIndex] = songs[songIndex].copy(downloaded = update)
-            var songList = songsList.value.toMutableList()
-            songList[songListIndex] = songList[songListIndex].copy(downloaded = update)
-            songsList.value = songList
+
+        }
+        if (songListIndex != -1) {
+            var songsListCopy = songsList.value.toMutableList()
+            songsListCopy[songListIndex] = songsList.value[songListIndex].copy(downloaded = update)
+            songsList.value = songsListCopy
         }
         if (savedFile) {
             saveMusicDataToCache(cacheFile)
@@ -33,20 +36,19 @@ object Playlist {
 
     fun updateLockedById(id: ID, update: Boolean, savedFile: Boolean, songsList: MutableState<List<Song>>) {
         val songIndex = songs.indexOfFirst { it.id == id }
+        val songListIndex = songsList.value.indexOfFirst { it.id == id }
         if (songIndex != -1) { // Vérifie si l'index existe
             songs[songIndex] = songs[songIndex].copy(locked = update)
-            var songList = songsList.value.toMutableList()
-            val songListIndex = songsList.value.indexOfFirst { it.id == id }
-            songList[songListIndex] = songList[songListIndex].copy(locked = update)
-            songsList.value = songList
+        }
+        if (songListIndex != -1) {
+            var songsListCopy = songsList.value.toMutableList()
+            songsListCopy[songListIndex] = songsList.value[songListIndex].copy(locked = update)
+            songsList.value = songsListCopy
         }
         if (savedFile) {
             saveMusicDataToCache(cacheFile)
         }
     }
-
-
-
 
     private fun saveMusicDataToCache(cacheFile : File) {
         val json = Gson().toJson(songs)

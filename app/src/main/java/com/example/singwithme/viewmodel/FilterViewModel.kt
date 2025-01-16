@@ -7,24 +7,20 @@ import com.example.singwithme.objects.Playlist
 
 class FilterViewModel() : ViewModel() {
 
-    var text = ""
     var songs = mutableListOf<Song>()
-    fun setFilter(text: String) {
-        this.text = text
-    }
 
-    fun getFilter(): String {
-        return text
-    }
-
-    fun setFilteredSongs(text: String) : MutableList<Song> {
-        if (text == "") {
-            this.songs = Playlist.songs.toMutableList()
-        } else {
-            this.songs = Playlist.songs.toList().filter { song ->
+    fun setFilteredSongs(text: String, unlocked : Boolean, downloaded: Boolean) : MutableList<Song> {
+        this.songs = Playlist.songs.toList().filter { song ->
+            if (!unlocked && !downloaded) {
                 song.id.artist.contains(text, ignoreCase = true) || song.id.name.contains(text, ignoreCase = true)
-            }.toMutableList()
-        }
+            } else if (unlocked && !downloaded) {
+                (song.id.artist.contains(text, ignoreCase = true) || song.id.name.contains(text, ignoreCase = true)) && !song.locked
+            } else if (!unlocked) {
+                (song.id.artist.contains(text, ignoreCase = true) || song.id.name.contains(text, ignoreCase = true)) && song.downloaded
+            } else {
+                (song.id.artist.contains(text, ignoreCase = true) || song.id.name.contains(text, ignoreCase = true)) && song.downloaded && !song.locked
+            }
+        }.toMutableList()
         return songs
     }
 

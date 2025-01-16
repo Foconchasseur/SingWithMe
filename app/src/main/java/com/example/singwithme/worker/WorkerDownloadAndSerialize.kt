@@ -103,7 +103,7 @@ class WorkerDownloadAndSerialize(
         }
 
         if (lyrics[0].startTime != 0.0f) {
-            lyrics.add(0, LyricsLine("", 0.0f, lyrics[0].startTime))
+            lyrics.add(0, LyricsLine("...", 0.0f, lyrics[0].startTime))
         }
 
         return SongData(title, artist, lyrics, track)
@@ -118,10 +118,10 @@ class WorkerDownloadAndSerialize(
                     oos.writeObject(songData)
                 }
             }
-            Log.e("serializeObjectToCache", "Serialized object saved as $fileName")
+            Log.i("serializeObjectToCache", "Serialized object saved as $fileName")
         }
         catch (e: Exception) {
-            Log.e("serializeObjectToCache", "Error during serialization : ${e.message}")
+            Log.i("serializeObjectToCache", "Error during serialization : ${e.message}")
             throw Exception("Erreur lors de la sérialisation : \n ${e.message}")
         }
 

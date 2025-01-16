@@ -25,11 +25,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 // Définir des ColorScheme
 val LightColorScheme = lightColorScheme(
-    primary = LightPrimary,
-    secondary = LightSecondary,
-    background = LightBackground,
-    onBackground = LightOnBackground,
-    tertiary = Color(0xFFFF0000)
+    primary = LightPrimary, //Couleur des boutons et des swithcs
+    secondary = LightSecondary, // Couleur du slider et des switchs
+    //surface = LightBackground, // Couleur de gridCard
+    //onSurface = LightOnBackground, // Couleur d'une card
+    background = LightBackground, // Couleur du fond de l'écran
+    onBackground = LightOnBackground, // Couleur du texte
+    tertiary = Color(0xFFFF0000) // Couleur du texte du karaoke
 )
 
 val DarkColorScheme = darkColorScheme(
