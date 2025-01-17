@@ -1,6 +1,5 @@
 package com.example.singwithme.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DownloadDone
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -31,8 +29,20 @@ import androidx.compose.ui.unit.dp
 import com.example.singwithme.data.models.Song
 import com.example.singwithme.viewmodel.FilterViewModel
 
+/**
+ * FilterText est un composant permettant de chosir les options de filtrage des chansons
+ * @param filterViewModel : FilterViewModel, le viewModel qui gère la logique de filtrage
+ * @param modifier : Modifier, le modifier du composant
+ * @param songList : MutableState<List<Song>>, la liste des chansons filtrées
+ */
+
 @Composable
-fun FilterText(filterViewModel: FilterViewModel, modifier: Modifier, songList: MutableState<List<Song>>) {
+fun FilterText(
+    filterViewModel: FilterViewModel,
+    modifier: Modifier,
+    songList: MutableState<List<Song>>
+) {
+    // On utilise le remember pour sauvegarder l'état des variables entre les recompositions
     var text by remember { mutableStateOf("") }
     var isCheckedDownloaded by remember { mutableStateOf(false) }
     var isCheckedUnlocked by remember { mutableStateOf(false) }
@@ -41,17 +51,18 @@ fun FilterText(filterViewModel: FilterViewModel, modifier: Modifier, songList: M
     ){
         Box(
             modifier = Modifier
-                .weight(0.4f) // 80% de la largeur
+                .weight(0.4f)
                 .padding(horizontal = 8.dp)
         )  {
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(16.dp)), // Arrondir les coins
+                    .clip(RoundedCornerShape(16.dp)),
                 value = text,
                 onValueChange = {
                     text = it
                     songList.value = filterViewModel.setFilteredSongs(text, isCheckedUnlocked, isCheckedDownloaded)
+
 
                 },
                 label = { Text("Artiste ou titre") }
@@ -59,7 +70,7 @@ fun FilterText(filterViewModel: FilterViewModel, modifier: Modifier, songList: M
         }
         Box(
             modifier = Modifier
-                .weight(0.2f) // 80% de la largeur
+                .weight(0.2f)
                 .padding(horizontal = 8.dp)
         ){
             Button(
@@ -83,9 +94,6 @@ fun FilterText(filterViewModel: FilterViewModel, modifier: Modifier, songList: M
                 checked = isCheckedDownloaded,
                 onCheckedChange = {
                     isCheckedDownloaded = it
-                    if(it){
-                        isCheckedUnlocked = it
-                    }
                     songList.value = filterViewModel.setFilteredSongs(text, isCheckedUnlocked, isCheckedDownloaded)
                 },
                 colors = SwitchDefaults.colors(

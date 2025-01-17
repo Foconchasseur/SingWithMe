@@ -114,7 +114,7 @@ fun SongCardLockedPreview() {
     ) {
         SongCard(
             song = mockSongs[0],
-            downloadFunction = { _, _, _ -> },
+            downloadFilesSong = { _, _, _ -> },
             setPlayingTrue= { _ -> },
             deleteFiles = { _, _, _, _ -> },
             navController = rememberNavController(),
@@ -132,7 +132,7 @@ fun SongCardUnLockedPreview() {
     ) {
         SongCard(
             song = mockSongs[1],
-            downloadFunction = { _, _, _ -> },
+            downloadFilesSong = { _, _, _ -> },
             setPlayingTrue= { _ -> },
             deleteFiles = { _, _, _, _ -> },
             navController = rememberNavController(),
@@ -149,7 +149,7 @@ fun SongCardDownloadedPreview() {
     ) {
         SongCard(
             song = mockSongs[3],
-            downloadFunction = { _, _, _ -> },
+            downloadFilesSong = { _, _, _ -> },
             setPlayingTrue= { _ -> },
             deleteFiles = { _, _, _, _ -> },
             navController = rememberNavController(),
@@ -167,7 +167,7 @@ fun SongGridCardPreview(){
     ) {
         SongGridCard(
             modifier = Modifier,
-            downloadFunction = { _, _, _ -> },
+            downloadFilesSong = { _, _, _ -> },
             setPlayingTrue= { _ -> },
             deleteFiles = { _, _, _, _ -> },
             navController = rememberNavController(),

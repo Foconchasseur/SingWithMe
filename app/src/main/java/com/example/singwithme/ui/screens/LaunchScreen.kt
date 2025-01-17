@@ -14,12 +14,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.singwithme.data.models.Song
 
+/**
+ * LaunchScreen est l'écran de lancement de l'application lorsqu'aucune playlist n'est téléchargée
+ * @param downloadPlaylist : (MutableState<List<Song>>) -> Unit, la fonction de téléchargement de la playlist
+ * @param songList : MutableState<List<Song>>, la liste des chansons téléchargées (nécessaire pour downloadPlaylist)
+ */
 @Composable
 fun LaunchScreen(
     downloadPlaylist : (MutableState<List<Song>>) -> Unit,
@@ -29,9 +33,7 @@ fun LaunchScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
-
     )
-
     {
         Text(
         text = "Bienvenue sur SingWithMe",
@@ -71,11 +73,7 @@ fun LaunchScreen(
                         contentDescription = "Télécharger la playlist",
                     )
                 }
-
-
             }
         )
-
     }
-
 }

@@ -32,7 +32,7 @@ import java.io.File
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.collectAsState
 import com.example.singwithme.objects.Playlist
-import com.example.singwithme.ui.theme.CustomColorScheme
+import com.example.singwithme.ui.theme.BlueColorScheme
 import com.example.singwithme.ui.theme.DarkColorScheme
 import com.example.singwithme.ui.theme.JapanColorScheme
 import com.example.singwithme.ui.theme.LightColorScheme
@@ -57,7 +57,7 @@ fun KaraokeNavigation(
     val filterViewModel = FilterViewModel()
 
     val currentThemeIndex by themeViewModel.currentThemeIndex.collectAsState()
-    val themes = listOf(LightColorScheme, DarkColorScheme, CustomColorScheme, JapanColorScheme)
+    val themes = listOf(LightColorScheme, DarkColorScheme, BlueColorScheme, JapanColorScheme)
 
 
     MaterialTheme(
@@ -80,7 +80,7 @@ fun KaraokeNavigation(
                     Log.d("Playlist",Playlist.songs.toList().toString())
                     MenuScreen(
                         navController = navController,
-                        downloadFunction = downloadViewModel::downloadAndSerializeSong,
+                        downloadFilesSong = downloadViewModel::downloadAndSerializeSong,
                         setPlayingTrue = karaokeViewModel::setPlaying,
                         deleteFiles = downloadViewModel::deleteDownloadedFiles,
                         quitApplication = quitApplication,

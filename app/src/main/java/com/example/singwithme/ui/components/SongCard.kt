@@ -3,7 +3,6 @@ package com.example.singwithme.ui.components
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.PlayArrow
@@ -31,10 +29,20 @@ import com.example.singwithme.data.models.ID
 import com.example.singwithme.data.models.Song
 import com.example.singwithme.viewmodel.ErrorViewModel
 
+/**
+ * SongCard est un composant permettant d'afficher une carte de musique avec des actions associées
+ * @param song : Song, la musique à afficher
+ * @param downloadFilesSong : (ID, ErrorViewModel, MutableState<List<Song>>) -> Unit, la fonction de téléchargement des paroles et du ficher audio
+ * @param setPlayingTrue : (Boolean) -> Unit, la fonction qui met à jour l'état de lecture lorsqu'une musique est lancée
+ * @param deleteFiles : (Context, String, ID, MutableState<List<Song>>) -> Unit, la fonction de suppression des fichiers audio et des paroles
+ * @param navController : NavController, le contrôleur de navigation afin de lancer l'écran de lecture de la musique
+ * @param errorViewModel : ErrorViewModel, le viewModel qui gère les erreurs de l'application (nécessaire pour downloadFilesSong)
+ * @param songList : MutableState<List<Song>>, la liste des chansons filtrées (nécessaire pour downloadFilesSong et deleteFiles)
+ */
 @Composable
 fun SongCard(
     song: Song,
-    downloadFunction: (ID, ErrorViewModel, MutableState<List<Song>>) -> Unit,
+    downloadFilesSong: (ID, ErrorViewModel, MutableState<List<Song>>) -> Unit,
     setPlayingTrue: (Boolean) -> Unit,
     deleteFiles: (Context, String, ID, MutableState<List<Song>>) -> Unit,
     navController: NavController,
@@ -45,9 +53,8 @@ fun SongCard(
     val backgroundColor = if (song.locked) {
         MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f) // Grisé si locked
     } else {
-        MaterialTheme.colorScheme.surface // Couleur normale
+        MaterialTheme.colorScheme.surface
     }
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -78,7 +85,7 @@ fun SongCard(
         Box(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .weight(0.3f) // 70% de la largeur*
+                .weight(0.3f)
         ){
 
             if (!song.locked) {
@@ -88,8 +95,8 @@ fun SongCard(
                     ){
                         Button(
                             onClick = {
-                                Log.d("Button Download", "Le bouton a ete appuyé sur la musique "+ song.id.name)
-                                song.id?.let { downloadFunction(it, errorViewModel, songList) }
+                                Log.i("SongCard", "Téléchargement des fichiers de la musique "+ song.id.name)
+                                song.id?.let { downloadFilesSong(it, errorViewModel, songList) }
                             },
                             modifier = Modifier
                         ) {
@@ -108,9 +115,10 @@ fun SongCard(
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         ActionButton(
-                            icon = Icons.Default.Delete, // Bouton lecture
+                            icon = Icons.Default.Delete,
                             contentDescription = "Delete",
                             onClick = {
+                                Log.i("SongCard", "Suppression des fichiers de la musique "+ song.id.name)
                                 val fileName = song.path.substringBefore(".").replace("/","_")
                                 song.id?.let { deleteFiles(currentContext,fileName, it, songList) }
                             }

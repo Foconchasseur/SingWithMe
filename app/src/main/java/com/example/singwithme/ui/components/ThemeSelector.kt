@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+
+/**
+ * ThemeSelector est un composant permettant de choisir le thème de couleur de l'application
+ * @param currentThemeIndex : Int, l'index du thème actuel
+ * @param onThemeChanged : (Int) -> Unit, la fonction qui met à jour le thème de l'application
+ */
 @Composable
 fun ThemeSelector(
     currentThemeIndex: Int,
@@ -31,14 +34,12 @@ fun ThemeSelector(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth(0.6f).fillMaxHeight()
     ) {
-        val themesName = listOf("clair", "sombre", "bleu","japonais") // Ajouter les noms des thèmes
-        // Bouton de navigation gauche
+        val themesName = listOf("clair", "sombre", "bleu","japonais") // Rajouter ou supprimer les noms des thèmes ici en cas de changement
         IconButton(
             onClick = {
-            Log.d("ThemeSelector", "Current theme index: $currentThemeIndex" + " Fleche gauche")
             if (currentThemeIndex > 0) {
                 onThemeChanged(currentThemeIndex - 1)
-                Log.d("ThemeSelector", "New theme index: $currentThemeIndex" + " Fleche gauche")
+                Log.i("ThemeSelector", "New theme : ${themesName[currentThemeIndex]}")
             }},
             modifier = Modifier.weight(0.15f) // 15% de la largeur
         ) {
@@ -49,9 +50,9 @@ fun ThemeSelector(
         Box(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .weight(0.7f) // 70% de la largeur*
+                .weight(0.7f)
         ){
-            // Affichage du nom du thème actuel (optionnel)
+            // Affichage du nom du thème actuel
             Text(
                 text = "Thème ${themesName[currentThemeIndex]}",
                 style = MaterialTheme.typography.bodyLarge,
@@ -61,10 +62,9 @@ fun ThemeSelector(
 
         // Bouton de navigation droite
         IconButton(onClick = {
-            Log.d("ThemeSelector", "Current theme index: $currentThemeIndex" + " Fleche droite")
-            if (currentThemeIndex < themesName.size - 1) {  // Changer cette limite en fonction du nombre de thèmes
+            if (currentThemeIndex < themesName.size - 1) {
                 onThemeChanged(currentThemeIndex + 1)
-                Log.d("ThemeSelector", "New theme index: $currentThemeIndex" + " Fleche droite")
+                Log.i("ThemeSelector", "New theme : ${themesName[currentThemeIndex]}")
             }},
             modifier = Modifier.weight(0.15f)
             ){

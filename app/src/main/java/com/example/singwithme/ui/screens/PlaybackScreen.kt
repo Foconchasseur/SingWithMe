@@ -1,7 +1,6 @@
 package com.example.singwithme.ui.screens
 
 import KaraokeViewModel
-import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,10 +34,11 @@ import com.example.singwithme.ui.components.KaraokeSlider
 import com.example.singwithme.ui.pxToDp
 import kotlinx.coroutines.delay
 
-fun loadLyricsFromAssets(context: Context, fileName: String): String {
-    return context.assets.open(fileName).bufferedReader().use { it.readText() }
-}
-
+/**
+ * Affiche le contenue du karaoke
+ * @param navController : NavController, le contrôleur de navigation necessaire pour créer la fonction de retour au menu
+ * @param karaokeViewModel : KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
+ */
 @Composable
 fun PlaybackScreenContent(navController: NavHostController, karaokeViewModel: KaraokeViewModel) {
     PlaybackScreen(
@@ -47,21 +47,27 @@ fun PlaybackScreenContent(navController: NavHostController, karaokeViewModel: Ka
     )
 }
 
+/**
+ * PlaybackScreen affiche le karaoke avec le défilement de texte et les composants pour gérer la musique
+ * @param karaokeViewModel : KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
+ * @param onMenuClick : permet de revenir au menu
+ */
 @Composable
 fun PlaybackScreen(
     karaokeViewModel: KaraokeViewModel,
     onMenuClick: () -> Unit,
 ) {
+    //récupère les lyrics de la musique
     val lyrics = CurrentMusicData.lyrics
-    var currentLyricCount by remember { mutableStateOf(0) }
+    var currentLyricIndex by remember { mutableStateOf(0) }
     var currentLyric by remember { mutableStateOf<LyricsLine?>(null) }
     var progress by remember { mutableStateOf(0f) }
-    var isRunning by remember { mutableStateOf(true) } // Contrôle du LaunchedEffect
+    val isRunning by remember { mutableStateOf(true) } // Contrôle du LaunchedEffect
     var paused by remember { mutableStateOf(false) }
     val duration = lyrics.last().startTime
     // Synchronisation de l'audio et des paroles
     LaunchedEffect(isRunning) {
-        Log.d("LaucnhedEffect", "boucle")
+        Log.d("PlaybackScreen", "Lancement du karaoke")
         while (isRunning) {
             val currentPosition = karaokeViewModel.getCurrentPosition()?.div(1000f) // En seconde
             currentLyric =
@@ -71,8 +77,8 @@ fun PlaybackScreen(
                     progress = (currentPosition - it.startTime) / (it.endTime - it.startTime)
                 }
             }
-            currentLyricCount = lyrics.indexOf(currentLyric)
-            delay(50L) // Vérifier toutes les 100ms
+            currentLyricIndex = lyrics.indexOf(currentLyric)
+            delay(50L) // Vérifier toutes les 50ms l'état de la musique
         }
     }
 
@@ -87,13 +93,12 @@ fun PlaybackScreen(
         ) {
             KaraokeSimpleText(
                 mainText = currentLyric?.text ?: "",
-                lastText = lyrics.getOrNull(currentLyricCount + 1)?.text ?: "",
-                nextText = lyrics.getOrNull(currentLyricCount - 1)?.text ?: "",
+                lastText = lyrics.getOrNull(currentLyricIndex + 1)?.text ?: "",
+                nextText = lyrics.getOrNull(currentLyricIndex - 1)?.text ?: "",
                 progress = progress,
                 modifier = Modifier
-                    .align(Alignment.CenterStart) // Centre le texte verticalement
-                    .fillMaxWidth() // Le texte occupe toute la largeur,
-
+                    .align(Alignment.CenterStart)
+                    .fillMaxWidth()
             )
         }
         Box(
@@ -150,15 +155,13 @@ fun PlaybackScreen(
                     contentDescription = "Restart",
                     onClick = {
                         progress = 0f
-                        currentLyricCount = 0
+                        currentLyricIndex = 0
                         karaokeViewModel.reset()
                     }
                 )
             }
         }
-
     }
-
 }
 
 
