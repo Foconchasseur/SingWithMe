@@ -2,7 +2,6 @@ package com.example.singwithme.ui.screens
 
 import KaraokeViewModel
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,38 +17,30 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.singwithme.data.models.LyricsLine
 import com.example.singwithme.objects.CurrentMusicData
 import com.example.singwithme.ui.components.ActionButton
-import com.example.singwithme.ui.components.Cursor
 import com.example.singwithme.ui.components.KaraokeSimpleText
 import com.example.singwithme.ui.components.KaraokeSlider
 import com.example.singwithme.ui.pxToDp
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 fun loadLyricsFromAssets(context: Context, fileName: String): String {
     return context.assets.open(fileName).bufferedReader().use { it.readText() }
 }
 
 @Composable
-fun PlaybackScreenContent(navController: NavHostController, karaokeViewModel: KaraokeViewModel, lyrics : List<LyricsLine>) {
+fun PlaybackScreenContent(navController: NavHostController, karaokeViewModel: KaraokeViewModel) {
     PlaybackScreen(
         karaokeViewModel = karaokeViewModel,
         onMenuClick = {navController.navigate("menu")},
@@ -100,7 +91,7 @@ fun PlaybackScreen(
                 nextText = lyrics.getOrNull(currentLyricCount - 1)?.text ?: "",
                 progress = progress,
                 modifier = Modifier
-                    .align(Alignment.CenterStart) // Centre le texte à la fois verticalement
+                    .align(Alignment.CenterStart) // Centre le texte verticalement
                     .fillMaxWidth() // Le texte occupe toute la largeur,
 
             )

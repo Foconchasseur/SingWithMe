@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import com.example.singwithme.data.models.Song
 import com.example.singwithme.objects.Playlist
 
-class FilterViewModel() : ViewModel() {
+open class FilterViewModel() : ViewModel() {
 
     var songs = mutableListOf<Song>()
 
-    fun setFilteredSongs(text: String, unlocked : Boolean, downloaded: Boolean) : MutableList<Song> {
+    open fun setFilteredSongs(text: String, unlocked : Boolean, downloaded: Boolean) : MutableList<Song> {
         this.songs = Playlist.songs.toList().filter { song ->
             if (!unlocked && !downloaded) {
                 song.id.artist.contains(text, ignoreCase = true) || song.id.name.contains(text, ignoreCase = true)
@@ -24,7 +24,7 @@ class FilterViewModel() : ViewModel() {
         return songs
     }
 
-    fun getFilteredSongs(): List<Song> {
+    open fun getFilteredSongs(): List<Song> {
         return songs
     }
 

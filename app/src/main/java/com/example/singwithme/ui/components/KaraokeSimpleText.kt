@@ -37,7 +37,7 @@ fun KaraokeSimpleText(mainText: String, nextText : String, lastText : String, pr
     var fontsize = 30.sp
     var littleFontsize = 20.sp
     var textWidth by remember { mutableStateOf(0) }
-    var textHeight by remember { mutableStateOf(0) }
+    var textHeight by remember { mutableStateOf(0) }//mis à 100 pour la preview
 
     var textPosition by remember { mutableStateOf(Offset.Zero) }
     Box(
@@ -56,7 +56,7 @@ fun KaraokeSimpleText(mainText: String, nextText : String, lastText : String, pr
                     textWidth = size.width
                     textHeight = size.height
                 }
-                .align(Alignment.Center) // Y librement géré ici
+                .align(Alignment.Center)
                 .onGloballyPositioned { coordinates ->
                     val position = coordinates.positionInParent()
                     textPosition = position
@@ -77,13 +77,13 @@ fun KaraokeSimpleText(mainText: String, nextText : String, lastText : String, pr
             modifier = Modifier
                 .offset(y = (textPosition.y + textHeight).dp)
                 .align(Alignment.Center),
+            color = MaterialTheme.colorScheme.onBackground
         )
         Text(mainText,
             fontSize = fontsize,
             softWrap = false,
             modifier = Modifier
                 .offset { IntOffset(textPosition.x.roundToInt(), textPosition.y.roundToInt()) }
-                //.align(Alignment.CenterStart)
                 .size(width = textWidth.pxToDp() * progress, height = textHeight.pxToDp()),
             color = MaterialTheme.colorScheme.tertiary
 

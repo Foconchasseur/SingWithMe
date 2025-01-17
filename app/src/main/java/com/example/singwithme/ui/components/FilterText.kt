@@ -36,7 +36,6 @@ fun FilterText(filterViewModel: FilterViewModel, modifier: Modifier, songList: M
     var text by remember { mutableStateOf("") }
     var isCheckedDownloaded by remember { mutableStateOf(false) }
     var isCheckedUnlocked by remember { mutableStateOf(false) }
-    //var forceRecompose by remember { mutableStateOf(0) }
     Row(
         modifier = modifier.fillMaxWidth()
     ){

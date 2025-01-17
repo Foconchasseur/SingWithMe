@@ -4,16 +4,16 @@ import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class ErrorViewModel {
+open class ErrorViewModel {
     private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage
+    open val errorMessage: StateFlow<String?> = _errorMessage
 
-    fun showError(message: String) {
+    open fun showError(message: String) {
         Log.e("ErrorViewModel", "Error: $message")
         _errorMessage.value = message
     }
 
-    fun clearError() {
+    open fun clearError() {
         _errorMessage.value = null
     }
 }

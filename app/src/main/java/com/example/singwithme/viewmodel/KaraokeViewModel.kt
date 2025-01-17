@@ -1,34 +1,18 @@
-import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.singwithme.KaraokeApplication
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import java.io.File
-import kotlin.math.exp
-import kotlin.math.truncate
 
-class KaraokeViewModel() : ViewModel() {
+open class KaraokeViewModel() : ViewModel() {
 
-
-    ///
-    // Gestion du player MP3
-    ///
-    // ExoPlayer instance
-    @SuppressLint("StaticFieldLeak")
-    private val context = KaraokeApplication.instance.applicationContext
     var exoPlayer : ExoPlayer? = null
     // LiveData to observe the playback state
     private var isPlaying = true;
 
     private var duration = 0L;
 
-    fun getIsPlaying(): Boolean{
+    open fun getIsPlaying(): Boolean{
         return isPlaying
     }
     fun initializePlayer(context: Context, uri: Uri) {
@@ -51,7 +35,7 @@ class KaraokeViewModel() : ViewModel() {
     }
 
     // Pause the audio
-    fun pause() {
+    open fun pause() {
         if (isPlaying) {
             exoPlayer?.pause()
             isPlaying = false
@@ -68,11 +52,11 @@ class KaraokeViewModel() : ViewModel() {
         isPlaying = false
     }
 
-    fun getCurrentPosition(): Long? {
+    open fun getCurrentPosition(): Long? {
         return exoPlayer?.currentPosition
     }
 
-    fun setCurrentPosition(position: Long) {
+    open fun setCurrentPosition(position: Long) {
         exoPlayer?.seekTo(position)
     }
 

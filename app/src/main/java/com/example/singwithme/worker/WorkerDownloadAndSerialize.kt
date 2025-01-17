@@ -21,7 +21,7 @@ class WorkerDownloadAndSerialize(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
-        Log.e("WorkerDownloadAndSerialize", "Started Worker")
+        Log.i("WorkerDownloadAndSerialize", "Started Worker")
         val filename = inputData.getString("fileName") ?: return Result.failure()
 
         // Télécharger le fichier .md
@@ -42,7 +42,7 @@ class WorkerDownloadAndSerialize(
                     // Sérialiser directement l'objet Music
                     serializeObjectToCache(applicationContext, music, "${fileSaveName}.ser")
 
-                    Log.e("WorkerDownloadAndSerialize", "Successfully serialized ${fileSaveName}")
+                    Log.i("WorkerDownloadAndSerialize", "Successfully serialized ${fileSaveName}")
                     return Result.success()
                 }
             }
