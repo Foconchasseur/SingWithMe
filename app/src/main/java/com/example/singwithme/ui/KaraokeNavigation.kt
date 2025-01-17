@@ -106,9 +106,7 @@ fun KaraokeNavigation(
                     val music = MusicUtils.loadMusicFromCache(currentContext, "$fileName.ser")
                     CurrentMusicData.lyrics = music.lyrics
                     val mp3FilePath = File(currentContext.cacheDir, "$fileName.mp3").absolutePath
-                    karaokeViewModel.initializePlayer(currentContext,mp3FilePath.toUri())
-
-                    PlaybackScreenContent(navController, karaokeViewModel)
+                    PlaybackScreenContent(navController, karaokeViewModel, mp3FilePath.toUri(),currentContext)
                 }
             }
         }

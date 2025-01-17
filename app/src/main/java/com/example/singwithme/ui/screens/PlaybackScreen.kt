@@ -1,6 +1,8 @@
 package com.example.singwithme.ui.screens
 
 import KaraokeViewModel
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,10 +42,17 @@ import kotlinx.coroutines.delay
  * @param karaokeViewModel : KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
  */
 @Composable
-fun PlaybackScreenContent(navController: NavHostController, karaokeViewModel: KaraokeViewModel) {
+fun PlaybackScreenContent(
+    navController: NavHostController,
+    karaokeViewModel: KaraokeViewModel,
+    uri: Uri,
+    context: Context
+) {
     PlaybackScreen(
         karaokeViewModel = karaokeViewModel,
         onMenuClick = {navController.navigate("menu")},
+        uri = uri,
+        context = context
     )
 }
 
@@ -56,19 +65,21 @@ fun PlaybackScreenContent(navController: NavHostController, karaokeViewModel: Ka
 fun PlaybackScreen(
     karaokeViewModel: KaraokeViewModel,
     onMenuClick: () -> Unit,
+    uri: Uri,
+    context: Context
 ) {
     //récupère les lyrics de la musique
     val lyrics = CurrentMusicData.lyrics
     var currentLyricIndex by remember { mutableStateOf(0) }
     var currentLyric by remember { mutableStateOf<LyricsLine?>(null) }
     var progress by remember { mutableStateOf(0f) }
-    val isRunning by remember { mutableStateOf(true) } // Contrôle du LaunchedEffect
     var paused by remember { mutableStateOf(false) }
     val duration = lyrics.last().startTime
     // Synchronisation de l'audio et des paroles
-    LaunchedEffect(isRunning) {
+    LaunchedEffect(Unit) {
         Log.d("PlaybackScreen", "Lancement du karaoke")
-        while (isRunning) {
+        karaokeViewModel.initializePlayer(context = context, uri = uri)
+        while (true) {
             val currentPosition = karaokeViewModel.getCurrentPosition()?.div(1000f) // En seconde
             currentLyric =
                 lyrics.find { it.startTime <= currentPosition!! && it.endTime > currentPosition }
