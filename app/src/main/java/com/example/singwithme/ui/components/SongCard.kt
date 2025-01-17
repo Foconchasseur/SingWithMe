@@ -7,11 +7,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -91,8 +94,9 @@ fun SongCard(
                             modifier = Modifier
                         ) {
                             Text("Télécharger")
+                            Spacer(modifier = Modifier.size(4.dp))
                             Icon(
-                                imageVector = Icons.Default.Add,
+                                imageVector = Icons.Filled.Download,
                                 contentDescription = "Download Icon"
                             )
                         }
