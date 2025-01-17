@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.collectAsState
+import com.example.singwithme.objects.Playlist
 import com.example.singwithme.ui.theme.CustomColorScheme
 import com.example.singwithme.ui.theme.DarkColorScheme
 import com.example.singwithme.ui.theme.JapanColorScheme
@@ -76,6 +77,7 @@ fun KaraokeNavigation(
                         errorViewModel
                     )
                     Log.d("Menu","Affichage du menu")
+                    Log.d("Playlist",Playlist.songs.toList().toString())
                     MenuScreen(
                         navController = navController,
                         downloadFunction = downloadViewModel::downloadAndSerializeSong,

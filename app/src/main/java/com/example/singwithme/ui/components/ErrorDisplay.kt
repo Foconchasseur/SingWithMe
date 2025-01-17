@@ -35,7 +35,7 @@ fun ErrorDisplay(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f))
+                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
                 .zIndex(1f)
                 .pointerInput(Unit) { // Capture toutes les interactions pour bloquer leur propagation
                     detectTapGestures { }
@@ -45,7 +45,7 @@ fun ErrorDisplay(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .background(Color.White, shape = RoundedCornerShape(8.dp))
+                    .background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(8.dp))
                     .padding(16.dp)
             ) {
                 Text(

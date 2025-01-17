@@ -46,17 +46,24 @@ class KaraokeActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         Log.d("KaraokeActivity", "onPause")
-        karaokeViewModel.pause()
+        if (karaokeViewModel.getIsPlaying()){
+            karaokeViewModel.pause()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         Log.d("KaraokeActivity", "onResume")
-        karaokeViewModel.pause()
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
+    }
+
+    override fun onBackPressed() {
+        if (false) {
+            super.onBackPressed()
+        }
     }
 }

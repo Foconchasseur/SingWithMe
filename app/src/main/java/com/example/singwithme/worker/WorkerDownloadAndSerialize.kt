@@ -50,8 +50,7 @@ class WorkerDownloadAndSerialize(
             // Si le téléchargement a échoué, on renvoie un résultat d'échec qui sera traiter par le TaskManager
             Log.e("WorkerDownloadAndSerialize", "Failed to download .md file")
             val errorData = Data.Builder()
-                .putString("error", "Il y a eu une erreur lors du téléchargement du fichier .md. " +
-                            "Code HTTP : \n ${response.code}"
+                .putString("error", "erreur lors du traitement de la musique"
                 )
                 .build()
             Result.failure(errorData)
@@ -61,7 +60,7 @@ class WorkerDownloadAndSerialize(
                 Log.e("WorkerDownloadAndSerialize", "Error during execution : ${e.message}")
                 val errorData = Data.Builder()
                     .putString("error",
-                        "Il y a eu une erreur lors du traitement du fichier de parole : \n ${e.message}"
+                        "erreur lors du téléchargement de la musique"
                     )
                     .build()
                 Result.failure(errorData)
