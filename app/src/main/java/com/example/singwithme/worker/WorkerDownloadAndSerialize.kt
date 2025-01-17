@@ -74,12 +74,14 @@ class WorkerDownloadAndSerialize(
         val track = lines[6]
 
         val lyrics = mutableListOf<LyricsLine>()
-        val regex = Regex("""\{ (\d+:\d+) \}([^{}]*)""")
+        //val regex = Regex("""\{ (\d+:\d+) \}([^{}]*)""")
+        val regex = Regex("""\{\s?(\d+:\d+)\s?\}([^{}]*)""")
+
 
         for (i in 8 until lines.size - 1) {
             val line = lines[i]
-
             val matchResult = regex.findAll(line)
+
             if (matchResult != null) {
                 for (match in matchResult) {
                     val (stringStartTime, lyricsText) = match.destructured
@@ -98,11 +100,18 @@ class WorkerDownloadAndSerialize(
         }
 
         for (i in 0 until lyrics.size - 1) {
+            if (lyrics[i].startTime == lyrics[i + 1].startTime){
+                lyrics[i + 1].startTime += 0.5f
+            }
             lyrics[i].endTime = lyrics[i + 1].startTime
+            if (lyrics[i].text == "") {
+                lyrics[i].text = ". . ."
+            }
+            Log.d("start and end times", "${lyrics[i].startTime} and ${lyrics[i].endTime}")
         }
 
         if (lyrics[0].startTime != 0.0f) {
-            lyrics.add(0, LyricsLine("", 0.0f, lyrics[0].startTime))
+            lyrics.add(0, LyricsLine(". . .", 0.0f, lyrics[0].startTime))
         }
 
         return SongData(title, artist, lyrics, track)
