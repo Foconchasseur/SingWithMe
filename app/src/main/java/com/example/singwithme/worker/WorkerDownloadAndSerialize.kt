@@ -1,4 +1,4 @@
-package com.example.singwithme.back
+package com.example.singwithme.worker
 
 import android.content.Context
 import android.util.Log
@@ -14,17 +14,38 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.ObjectOutputStream
 
+/**
+ * Un [CoroutineWorker] responsable du téléchargement et de la sérialisation des données musicales.
+ *
+ * Cette classe effectue les opérations suivantes :
+ * 1. Télécharge un fichier markdown contenant des informations sur la chanson depuis un serveur.
+ * 2. Convertit le contenu du fichier markdown en un objet [SongData].
+ * 3. Sérialise cet objet et le sauvegarde dans le cache local de l'application.
+ *
+ * La tâche peut échouer si le téléchargement ou la sérialisation rencontre une erreur.
+ */
 class WorkerDownloadAndSerialize(
     context: Context,
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
 
+    /**
+     * Télécharge et sérialise une chanson à partir d'un fichier markdown.
+     *
+     * Cette méthode effectue les étapes suivantes :
+     * - Récupère le nom du fichier markdown à télécharger depuis les données d'entrée.
+     * - Télécharge le fichier markdown depuis l'URL spécifiée dans [Constants.SERVER_URL].
+     * - Parse le contenu du fichier markdown pour en extraire les informations sur la chanson et ses paroles.
+     * - Sérialise les données de la chanson en un objet [SongData] et les sauvegarde dans le cache de l'application.
+     *
+     * @return [Result.success] si l'opération réussit, [Result.failure] en cas d'erreur.
+     */
     override suspend fun doWork(): Result {
         Log.i("WorkerDownloadAndSerialize", "Started Worker")
         val filename = inputData.getString("fileName") ?: return Result.failure()
 
         // Télécharger le fichier .md
-        Log.d("URL DOWNLOAD","/{$filename}.md")
+        Log.d("URL DOWNLOAD", "/{$filename}.md")
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(Constants.SERVER_URL + "/$filename.md")
@@ -37,7 +58,7 @@ class WorkerDownloadAndSerialize(
                 if (markdown != null) {
                     // Convertir les données Markdown en objet Music
                     val music = parseMarkdownToMusic(markdown)
-                    val fileSaveName = filename.replace("/","_")
+                    val fileSaveName = filename.replace("/", "_")
                     // Sérialiser directement l'objet Music
                     serializeObjectToCache(applicationContext, music, "${fileSaveName}.ser")
 
@@ -46,26 +67,32 @@ class WorkerDownloadAndSerialize(
                 }
             }
 
-            // Si le téléchargement a échoué, on renvoie un résultat d'échec qui sera traiter par le TaskManager
+            // Si le téléchargement a échoué, on renvoie un résultat d'échec
             Log.e("WorkerDownloadAndSerialize", "Failed to download .md file")
             val errorData = Data.Builder()
-                .putString("error", "erreur lors du traitement de la musique"
-                )
+                .putString("error", "erreur lors du traitement de la musique")
                 .build()
             Result.failure(errorData)
 
         } catch (e: Exception) {
-                // Si il y a une levée d'exception, on renvoie un résultat d'échec qui sera traiter par le TaskManager
-                Log.e("WorkerDownloadAndSerialize", "Error during execution : ${e.message}")
-                val errorData = Data.Builder()
-                    .putString("error",
-                        "erreur lors du téléchargement de la musique"
-                    )
-                    .build()
-                Result.failure(errorData)
+            // Si une exception survient, on renvoie un résultat d'échec
+            Log.e("WorkerDownloadAndSerialize", "Error during execution : ${e.message}")
+            val errorData = Data.Builder()
+                .putString("error", "erreur lors du téléchargement de la musique")
+                .build()
+            Result.failure(errorData)
         }
     }
 
+    /**
+     * Parse un contenu markdown pour extraire les informations sur la chanson et ses paroles.
+     *
+     * Le format du markdown est supposé être structuré de manière spécifique, avec des informations
+     * sur le titre, l'artiste, la piste audio et les paroles avec leurs minutages.
+     *
+     * @param markdown Le contenu du fichier markdown à analyser.
+     * @return Un objet [SongData] contenant les informations extraites.
+     */
     private fun parseMarkdownToMusic(markdown: String): SongData {
         val lines = markdown.split("\n")
         val title = lines[2]
@@ -73,9 +100,7 @@ class WorkerDownloadAndSerialize(
         val track = lines[6]
 
         val lyrics = mutableListOf<LyricsLine>()
-        //val regex = Regex("""\{ (\d+:\d+) \}([^{}]*)""")
         val regex = Regex("""\{\s?(\d+:\d+)\s?\}([^{}]*)""")
-
 
         for (i in 8 until lines.size - 1) {
             val line = lines[i]
@@ -94,12 +119,11 @@ class WorkerDownloadAndSerialize(
         }
 
         if (lyrics.isEmpty()) {
-            // Si aucune parole n'a été trouvée, on renvoie une exception
             throw Exception("Pas de paroles trouvées")
         }
 
         for (i in 0 until lyrics.size - 1) {
-            if (lyrics[i].startTime == lyrics[i + 1].startTime){
+            if (lyrics[i].startTime == lyrics[i + 1].startTime) {
                 lyrics[i + 1].startTime += 0.5f
             }
             lyrics[i].endTime = lyrics[i + 1].startTime
@@ -116,6 +140,13 @@ class WorkerDownloadAndSerialize(
         return SongData(title, artist, lyrics, track)
     }
 
+    /**
+     * Sérialise un objet [SongData] et le sauvegarde dans le cache de l'application.
+     *
+     * @param context Le contexte de l'application utilisé pour accéder au répertoire de cache.
+     * @param songData Les données de la chanson à sérialiser.
+     * @param fileName Le nom du fichier de destination pour la sérialisation.
+     */
     private fun serializeObjectToCache(context: Context, songData: SongData, fileName: String) {
         val cacheDir = context.cacheDir
         val file = File(cacheDir, fileName)
@@ -126,11 +157,9 @@ class WorkerDownloadAndSerialize(
                 }
             }
             Log.i("serializeObjectToCache", "Serialized object saved as $fileName")
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             Log.i("serializeObjectToCache", "Error during serialization : ${e.message}")
             throw Exception("Erreur lors de la sérialisation : \n ${e.message}")
         }
-
     }
 }

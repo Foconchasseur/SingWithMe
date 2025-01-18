@@ -12,8 +12,29 @@ import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
 
-class WorkerDownloadMp3 (context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+/**
+ * Un [CoroutineWorker] responsable du téléchargement d'un fichier MP3 depuis un serveur.
+ *
+ * Cette classe effectue les opérations suivantes :
+ * 1. Télécharge un fichier MP3 depuis un serveur spécifié dans [Constants.SERVER_URL].
+ * 2. Enregistre le fichier téléchargé dans le répertoire de cache de l'application.
+ * 3. Retourne un résultat de succès ou d'échec en fonction du statut du téléchargement.
+ *
+ * En cas d'erreur, un message d'erreur détaillé est inclus dans le résultat.
+ */
+class WorkerDownloadMp3(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
+    /**
+     * Télécharge un fichier MP3 et l'enregistre dans le répertoire de cache de l'application.
+     *
+     * Cette méthode effectue les étapes suivantes :
+     * - Récupère le nom du fichier MP3 à télécharger depuis les données d'entrée.
+     * - Effectue une requête HTTP pour télécharger le fichier MP3 depuis l'URL spécifiée.
+     * - Enregistre le fichier dans le répertoire de cache de l'application.
+     * - Retourne [Result.success] si le téléchargement est réussi ou [Result.failure] en cas d'erreur.
+     *
+     * @return [Result.success] si l'opération réussit, [Result.failure] en cas d'erreur.
+     */
     override suspend fun doWork(): Result {
         // Récupérer les paramètres
         val fileName = inputData.getString("fileName") ?: return Result.failure()
@@ -31,7 +52,7 @@ class WorkerDownloadMp3 (context: Context, params: WorkerParameters) : Coroutine
                 response.body?.byteStream()?.use { inputStream ->
                     // Enregistrer le fichier dans le cache
                     val cacheDir = applicationContext.cacheDir
-                    val fileSaveName = fileName.replace("/","_")
+                    val fileSaveName = fileName.replace("/", "_")
                     val properFileName = if (fileSaveName.endsWith(".mp3")) fileSaveName else "$fileSaveName.mp3"
 
                     val file = File(cacheDir, properFileName)

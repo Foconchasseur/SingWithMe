@@ -15,14 +15,14 @@ import com.example.singwithme.data.models.Song
 import com.example.singwithme.objects.Playlist
 import com.example.singwithme.viewmodel.ErrorViewModel
 
-/*
+/**
 * Classe qui gère les tâches de téléchargement et de sérialisation des musiques
  */
 class TaskManager (private val context: Context){
 
     private val workManager = WorkManager.getInstance(context)
 
-    /*
+    /**
     * Fonction qui télécharge et sérialise une musique
     * @param id : ID de la musique à télécharger
      */
