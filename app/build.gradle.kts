@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.singwithme"
+    namespace = "fr.enssat.singwithme.ROSSET_SABBI_SCIOTTI"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.singwithme"
+        applicationId = "fr.enssat.singwithme.ROSSET_SABBI_SCIOTTI"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
