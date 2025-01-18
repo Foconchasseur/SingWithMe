@@ -1,5 +1,3 @@
-package com.example.singwithme.repository
-
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.MutableState
@@ -17,12 +15,25 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 
+/**
+ * Repository responsable de la gestion de la playlist.
+ *
+ * Cette classe gère le téléchargement, la mise à jour, la lecture et la transformation des données de la playlist.
+ * Les données sont mises en cache pour une utilisation hors ligne.
+ *
+ * @param context Contexte utilisé pour accéder au cache et aux ressources.
+ */
 class PlaylistRepository(private val context: Context) {
+
+    /** Fichier de cache pour stocker les données de la playlist. */
     private val cacheFile = File(context.cacheDir, "songplaylist.json")
 
-    // URL du fichier JSON à télécharger
-    private val musicJsonUrl = Constants.PLAYLIST_URL+"/playlist.json"
+    /** URL du fichier JSON à télécharger. */
+    private val musicJsonUrl = Constants.PLAYLIST_URL + "/playlist.json"
 
+    /**
+     * Initialise la playlist en lisant les données du cache si disponibles.
+     */
     fun iniliazePlaylist() {
         if (cacheFile.exists()) {
             Log.d("MusicRepository", "Reading music data from cache")
@@ -30,29 +41,38 @@ class PlaylistRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Télécharge ou met à jour la playlist depuis le serveur.
+     *
+     * @param errorViewModel ViewModel utilisé pour gérer les erreurs.
+     * @param songsList État mutable contenant la liste des chansons.
+     */
     suspend fun downloadPlaylist(errorViewModel: ErrorViewModel, songsList: MutableState<List<Song>>) {
         if (!cacheFile.exists()) {
             Log.d("MusicRepository", "Downloading playlist")
-            firstDownloadPlaylist(errorViewModel,songsList)
+            firstDownloadPlaylist(errorViewModel, songsList)
         } else {
             Log.d("MusicRepository", "Updating playlist")
             updatePlaylist(errorViewModel)
         }
     }
 
+    /**
+     * Télécharge et enregistre pour la première fois la playlist depuis le serveur.
+     *
+     * @param errorViewModel ViewModel utilisé pour gérer les erreurs.
+     * @param songsList État mutable contenant la liste des chansons.
+     */
     private suspend fun firstDownloadPlaylist(errorViewModel: ErrorViewModel, songsList: MutableState<List<Song>>) {
-        return withContext(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 val client = OkHttpClient()
                 val request = Request.Builder().url(musicJsonUrl).build()
                 val response = client.newCall(request).execute()
                 if (response.isSuccessful) {
-                    // Télécharger le JSON
                     val inputJson = response.body?.string().orEmpty()
                     val json = transformJsonArray(inputJson)
-                    // Sauvegarder le fichier dans le cache
                     savePlaylistToCache(json)
-                    // Désérialiser et retourner la liste des musiques
                     deserializeMusicData(json, songsList)
                 } else {
                     errorViewModel.showError("Failed to download music data")
@@ -65,21 +85,24 @@ class PlaylistRepository(private val context: Context) {
         }
     }
 
-    private suspend fun updatePlaylist(errorViewModel: ErrorViewModel){
-        return withContext(Dispatchers.IO) {
+    /**
+     * Met à jour la playlist en comparant avec les données actuelles et en téléchargeant les nouvelles chansons.
+     *
+     * @param errorViewModel ViewModel utilisé pour gérer les erreurs.
+     */
+    private suspend fun updatePlaylist(errorViewModel: ErrorViewModel) {
+        withContext(Dispatchers.IO) {
             try {
                 val client = OkHttpClient()
                 val request = Request.Builder().url(musicJsonUrl).build()
                 val response = client.newCall(request).execute()
                 if (response.isSuccessful) {
-                    // Télécharger le JSON
                     val inputJson = response.body?.string().orEmpty()
                     val json = transformJsonArray(inputJson)
                     val type = object : TypeToken<List<Song>>() {}.type
                     val newSongs = Gson().fromJson<List<Song>>(json, type)
                     for (newSong in newSongs) {
                         val songIndex = Playlist.songs.indexOfFirst { it.id == newSong.id }
-                        Log.d("MusicRepository", "Song index: $songIndex")
                         if (songIndex == -1) {
                             Playlist.songs.add(newSong)
                         }
@@ -96,61 +119,73 @@ class PlaylistRepository(private val context: Context) {
             }
         }
     }
+
+    /**
+     * Lit les données de la playlist depuis le fichier de cache.
+     */
     fun readMusicDataFromCache() {
         cacheFile.inputStream().use { inputStream ->
             val json = inputStream.bufferedReader().use { it.readText() }
-            return deserializeMusicData(json, null)
+            deserializeMusicData(json, null)
         }
     }
 
-    // Désérialiser le JSON en une liste d'objets Song
+    /**
+     * Désérialise le JSON en une liste de chansons.
+     *
+     * @param json Le contenu JSON à désérialiser.
+     * @param songsList État mutable pour mettre à jour la liste des chansons (facultatif).
+     */
     private fun deserializeMusicData(json: String, songsList: MutableState<List<Song>>?) {
         val type = object : TypeToken<List<Song>>() {}.type
         val songs = Gson().fromJson<List<Song>>(json, type)
         Playlist.songs.clear()
         Playlist.songs.addAll(songs)
-        if (songs != null) {
-            if (songsList != null) {
-                songsList.value = Playlist.songs.toList()
-            }
-        }
+        songsList?.value = Playlist.songs.toList()
     }
 
-    // Sauvegarder les données téléchargées dans le cache
+    /**
+     * Sauvegarde les données de la playlist dans le cache.
+     *
+     * @param json Le contenu JSON à sauvegarder.
+     */
     private fun savePlaylistToCache(json: String) {
         cacheFile.outputStream().use { outputStream ->
             outputStream.write(json.toByteArray())
         }
     }
 
+    /**
+     * Renvoie le fichier de cache contenant les données de la playlist.
+     *
+     * @return Le fichier de cache.
+     */
     fun getCacheFile(): File {
         return cacheFile
     }
 
     /**
-     * Transforme un tableau JSON en un autre tableau JSON pour correspondre à la structure de données que l'on souhaite utiliser
+     * Transforme un tableau JSON en un format compatible avec la structure des chansons.
+     *
+     * @param input Le contenu JSON à transformer.
+     * @return Une chaîne JSON transformée.
      */
     fun transformJsonArray(input: String): String {
-        //TODO: Peut être gérer les erreurs ici aussi
         val originalArray = JSONArray(input)
         val transformedArray = JSONArray()
 
         for (i in 0 until originalArray.length()) {
             val originalObject = originalArray.getJSONObject(i)
-            // Créer l'objet "id"
-            val id = JSONObject()
-            id.put("name", originalObject.getString("name"))
-            id.put("artist", originalObject.getString("artist"))
-            // Créer le nouvel objet transformé
-            val transformedObject = JSONObject()
-            transformedObject.put("id", id)
-            val locked =  originalObject.optBoolean("locked", false)
-            transformedObject.put("locked", locked)
-            val path = originalObject.optString("path","")
-            transformedObject.put("path", path)
-            transformedObject.put("downloaded", false)
-
-            // Ajouter au tableau transformé
+            val id = JSONObject().apply {
+                put("name", originalObject.getString("name"))
+                put("artist", originalObject.getString("artist"))
+            }
+            val transformedObject = JSONObject().apply {
+                put("id", id)
+                put("locked", originalObject.optBoolean("locked", false))
+                put("path", originalObject.optString("path", ""))
+                put("downloaded", false)
+            }
             transformedArray.put(transformedObject)
         }
 
