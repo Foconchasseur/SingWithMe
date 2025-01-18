@@ -1,5 +1,6 @@
-package com.example.singwithme.viewmodel
+package com.example.singwithme.previews.mockviewmodel
 
+import com.example.singwithme.viewmodel.ErrorViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

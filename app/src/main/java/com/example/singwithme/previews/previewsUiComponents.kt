@@ -1,6 +1,6 @@
 package com.example.singwithme.previews
 
-import MockKaraokeViewModel
+import com.example.singwithme.previews.mockviewmodel.MockKaraokeViewModel
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,14 +15,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.example.singwithme.data.models.ID
-import com.example.singwithme.data.models.Song
+import com.example.singwithme.models.ID
+import com.example.singwithme.models.Song
 import com.example.singwithme.previews.mockviewmodel.MockFilterViewModel
 import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.Cursor
 import com.example.singwithme.ui.components.ErrorDisplay
 import com.example.singwithme.ui.components.FilterText
-import com.example.singwithme.viewmodel.MockErrorViewModel
+import com.example.singwithme.previews.mockviewmodel.MockErrorViewModel
 import com.example.singwithme.ui.components.KaraokeSimpleText
 import com.example.singwithme.ui.components.KaraokeSlider
 import com.example.singwithme.ui.components.SongCard

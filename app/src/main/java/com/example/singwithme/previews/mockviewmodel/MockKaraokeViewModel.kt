@@ -1,3 +1,7 @@
+package com.example.singwithme.previews.mockviewmodel
+
+import com.example.singwithme.viewmodel.KaraokeViewModel
+
 class MockKaraokeViewModel : KaraokeViewModel() {
 
     // Mock of the ExoPlayer

@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.singwithme.data.models.ID
-import com.example.singwithme.data.models.Song
+import com.example.singwithme.models.ID
+import com.example.singwithme.models.Song
 import com.example.singwithme.viewmodel.ErrorViewModel
 
 /**

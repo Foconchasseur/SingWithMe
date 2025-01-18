@@ -1,28 +1,7 @@
 package com.example.singwithme.ui.theme
 
-import BlueBackground
-import BlueOnBackground
-import BluePrimary
-import BlueSecondary
-import BlueTertiary
-import DarkBackground
-import DarkOnBackground
-import DarkPrimary
-import DarkSecondary
-import DarkTertiary
-import JapanBackground
-import JapanOnBackground
-import JapanPrimary
-import JapanSecondary
-import JapanTertiary
-import LightBackground
-import LightOnBackground
-import LightPrimary
-import LightSecondary
-import LightTertiary
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.ui.graphics.Color
 
 // Définir des ColorScheme
 //Modifier themesName dans ThemeSelector.kt lors de l'ajout ou la suppression de thèmes

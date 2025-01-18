@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.singwithme.data.models.Song
+import com.example.singwithme.models.Song
 
 /**
  * LaunchScreen est l'écran de lancement de l'application lorsqu'aucune playlist n'est téléchargée

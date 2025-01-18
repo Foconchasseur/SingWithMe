@@ -1,9 +1,9 @@
 package com.example.singwithme.previews.mockviewmodel
 
-import com.example.singwithme.data.models.ID
+import com.example.singwithme.models.ID
 import com.example.singwithme.viewmodel.FilterViewModel
 
-import com.example.singwithme.data.models.Song
+import com.example.singwithme.models.Song
 import com.example.singwithme.objects.Playlist
 
 class MockFilterViewModel : FilterViewModel() {

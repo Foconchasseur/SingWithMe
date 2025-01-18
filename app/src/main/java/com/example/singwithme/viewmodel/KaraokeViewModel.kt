@@ -1,3 +1,5 @@
+package com.example.singwithme.viewmodel
+
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel

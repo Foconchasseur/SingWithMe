@@ -1,7 +1,7 @@
 package com.example.singwithme.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.singwithme.data.models.Song
+import com.example.singwithme.models.Song
 import com.example.singwithme.objects.Playlist
 
 /**

@@ -1,6 +1,6 @@
 package com.example.singwithme.objects
 
-import com.example.singwithme.data.models.LyricsLine
+import com.example.singwithme.models.LyricsLine
 
 /**
  * Contient les données actuelles de la musique en cours, y compris les paroles.

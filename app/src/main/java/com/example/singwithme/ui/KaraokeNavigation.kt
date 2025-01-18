@@ -1,7 +1,7 @@
 package com.example.singwithme.ui
 
-import MenuScreen
-import KaraokeViewModel
+import com.example.singwithme.ui.screens.MenuScreen
+import com.example.singwithme.viewmodel.KaraokeViewModel
 import android.app.Activity
 import android.content.Context
 import android.util.Log
@@ -39,15 +39,15 @@ import com.example.singwithme.ui.theme.LightColorScheme
 
 /**
  * Element parent de tous les composables
- * @param playlistRepository : PlaylistRepository, gère la logique de téléchargement de la liste de musique
- * @param karaokeViewModel : KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
+ * @param playlistRepository : com.example.singwithme.repository.PlaylistRepository, gère la logique de téléchargement de la liste de musique
+ * @param karaokeViewModel : com.example.singwithme.viewmodel.KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
  */
 @Composable
 fun KaraokeNavigation(
     playlistRepository: PlaylistRepository,
     karaokeViewModel: KaraokeViewModel,
 
-) {
+    ) {
     val errorViewModel = ErrorViewModel()
     val currentContext = LocalContext.current
     val themeViewModel = ThemeViewModel(currentContext)
@@ -119,7 +119,7 @@ fun KaraokeNavigation(
 
 /**
  * fonction pour quitter l'application en cliquant sur un bouton
- * @param karaokeViewModel : KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
+ * @param karaokeViewModel : com.example.singwithme.viewmodel.KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
  * @param context : Context, le contexte actuel de l'application
  */
 fun quitApplication(karaokeViewModel: KaraokeViewModel, context: Context){

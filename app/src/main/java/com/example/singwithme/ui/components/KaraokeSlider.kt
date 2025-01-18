@@ -1,6 +1,6 @@
 package com.example.singwithme.ui.components
 
-import KaraokeViewModel
+import com.example.singwithme.viewmodel.KaraokeViewModel
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 /**
  * KaraokeSlider est un composant qui affiche et permet de modifier la position de la lecture de la chanson
  * @param modifier : Modifier, le modifier du composant
- * @param karaokeViewModel : KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
+ * @param karaokeViewModel : com.example.singwithme.viewmodel.KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
  * @param duration : Float, la durée de la chanson (endtime de la dernière ligne de la chanson en ms)
  */
 @Composable

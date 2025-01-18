@@ -26,7 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.singwithme.data.models.Song
+import com.example.singwithme.models.Song
 import com.example.singwithme.viewmodel.FilterViewModel
 
 /**

@@ -1,3 +1,5 @@
+package com.example.singwithme.ui.theme
+
 // Color.kt
 import androidx.compose.ui.graphics.Color
 //Light

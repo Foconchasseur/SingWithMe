@@ -1,4 +1,4 @@
-package com.example.singwithme.data.models
+package com.example.singwithme.models
 
 /**
  * Représente une chanson avec ses informations principales.

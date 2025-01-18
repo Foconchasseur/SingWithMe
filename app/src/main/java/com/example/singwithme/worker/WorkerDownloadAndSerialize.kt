@@ -6,8 +6,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.example.singwithme.objects.Constants
-import com.example.singwithme.data.models.LyricsLine
-import com.example.singwithme.data.models.SongData
+import com.example.singwithme.models.LyricsLine
+import com.example.singwithme.models.SongData
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File

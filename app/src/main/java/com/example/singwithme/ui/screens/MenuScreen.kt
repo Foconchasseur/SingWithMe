@@ -1,3 +1,4 @@
+package com.example.singwithme.ui.screens
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
@@ -18,8 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.singwithme.data.models.ID
-import com.example.singwithme.data.models.Song
+import com.example.singwithme.models.ID
+import com.example.singwithme.models.Song
 import com.example.singwithme.objects.Playlist
 import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.FilterText
@@ -32,7 +33,7 @@ import com.example.singwithme.viewmodel.FilterViewModel
 import com.example.singwithme.viewmodel.ThemeViewModel
 
 /**
- * MenuScreen est l'écran principal de l'application, il permet de visualiser la liste des chansons téléchargées
+ * com.example.singwithme.ui.screens.MenuScreen est l'écran principal de l'application, il permet de visualiser la liste des chansons téléchargées
  * @param navController : NavController, le contrôleur de navigation (necessaire pour songGridCard)
  * @param downloadFilesSong : (ID, ErrorViewModel, MutableState<List<Song>>) -> Unit, la fonction de téléchargement des paroles et du ficher audio d'une musique (nécessaire pour SongGridCard)
  * @param setPlayingTrue : (Boolean) -> Unit, la fonction qui met à jour l'état de lecture lorsqu'une musique est lancée (nécessaire pour SongGridCard)

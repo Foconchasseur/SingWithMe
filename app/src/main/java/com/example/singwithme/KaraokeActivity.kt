@@ -1,7 +1,7 @@
 package com.example.singwithme
 
-import KaraokeViewModel
-import PlaylistRepository
+import com.example.singwithme.viewmodel.KaraokeViewModel
+import com.example.singwithme.repository.PlaylistRepository
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity

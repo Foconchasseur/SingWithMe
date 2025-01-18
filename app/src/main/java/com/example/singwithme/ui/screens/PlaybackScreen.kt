@@ -1,6 +1,6 @@
 package com.example.singwithme.ui.screens
 
-import KaraokeViewModel
+import com.example.singwithme.viewmodel.KaraokeViewModel
 import android.content.Context
 import android.net.Uri
 import android.util.Log
@@ -28,7 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.singwithme.data.models.LyricsLine
+import com.example.singwithme.models.LyricsLine
 import com.example.singwithme.objects.CurrentMusicData
 import com.example.singwithme.ui.components.ActionButton
 import com.example.singwithme.ui.components.KaraokeSimpleText
@@ -39,7 +39,7 @@ import kotlinx.coroutines.delay
 /**
  * Affiche le contenue du karaoke
  * @param navController : NavController, le contrôleur de navigation necessaire pour créer la fonction de retour au menu
- * @param karaokeViewModel : KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
+ * @param karaokeViewModel : com.example.singwithme.viewmodel.KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
  */
 @Composable
 fun PlaybackScreenContent(
@@ -58,7 +58,7 @@ fun PlaybackScreenContent(
 
 /**
  * PlaybackScreen affiche le karaoke avec le défilement de texte et les composants pour gérer la musique
- * @param karaokeViewModel : KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
+ * @param karaokeViewModel : com.example.singwithme.viewmodel.KaraokeViewModel, le viewModel qui gère ExoPlayer pour la lecture de la chanson
  * @param onMenuClick : permet de revenir au menu
  */
 @Composable

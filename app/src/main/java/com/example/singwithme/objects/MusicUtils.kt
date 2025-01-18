@@ -1,7 +1,7 @@
 package com.example.singwithme.objects
 
 import android.content.Context
-import com.example.singwithme.data.models.SongData
+import com.example.singwithme.models.SongData
 import java.io.File
 import java.io.FileInputStream
 import java.io.ObjectInputStream
