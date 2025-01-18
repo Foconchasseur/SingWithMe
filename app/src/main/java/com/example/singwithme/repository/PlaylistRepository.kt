@@ -29,7 +29,7 @@ class PlaylistRepository(private val context: Context) {
     private val cacheFile = File(context.cacheDir, "songplaylist.json")
 
     /** URL du fichier JSON à télécharger. */
-    private val musicJsonUrl = Constants.PLAYLIST_URL + "/playlist.json"
+    private val musicJsonUrl = Constants.SERVER_URL + "/playlist.json"
 
     /**
      * Initialise la playlist en lisant les données du cache si disponibles.

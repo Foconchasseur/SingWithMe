@@ -8,7 +8,6 @@ import androidx.work.WorkerParameters
 import com.example.singwithme.objects.Constants
 import com.example.singwithme.data.models.LyricsLine
 import com.example.singwithme.data.models.SongData
-import com.example.singwithme.viewmodel.ErrorViewModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -28,7 +27,7 @@ class WorkerDownloadAndSerialize(
         Log.d("URL DOWNLOAD","/{$filename}.md")
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url(Constants.PLAYLIST_URL + "/$filename.md")
+            .url(Constants.SERVER_URL + "/$filename.md")
             .build()
 
         return try {

@@ -6,7 +6,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.example.singwithme.objects.Constants
-import com.example.singwithme.viewmodel.ErrorViewModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -18,7 +17,7 @@ class WorkerDownloadMp3 (context: Context, params: WorkerParameters) : Coroutine
     override suspend fun doWork(): Result {
         // Récupérer les paramètres
         val fileName = inputData.getString("fileName") ?: return Result.failure()
-        val url = Constants.PLAYLIST_URL + "/$fileName.mp3"
+        val url = Constants.SERVER_URL + "/$fileName.mp3"
         Log.d("DownloadMp3Worker", "Téléchargement du fichier MP3 depuis : $url")
 
         try {
