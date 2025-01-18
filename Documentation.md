@@ -1,13 +1,13 @@
 # Architecture du projet 
 
-## Description général 
+## Description générale
 
 ./presentation.md
 
 ## Structure modulaire 
 
 ### Models
-Les modèles représentent les données principales de l'application, comme :
+Les modèles représentent les données principales de l'application tels que :
 - **Song** : Contient **ID** ainsi que le lien vers les fichiers de la musique s'ils existent, .
 - **ID** : Contient le titre de la musique et l'artiste d'une musique.
 - **LyricsLine** : Gère une ligne de parole avec son timer de départ et son timer de fin.
@@ -26,36 +26,60 @@ Les ViewModels gèrent les états de l'application et permettent la communicatio
 - **ErrorViewModel** : Récupère les erreurs dans des actions asynchrone ou en fond pour les afficher à l'écran
 - **FilterViewModel** : Fitlre les musiques affichées dans le menu
 - **KaraokeViewModel** : Contient une instance **ExoPlayer** pour la lecture de la musique
-- **ThemeViewModel** : Gère le thème 
+- **ThemeViewModel** : Gère le thème utilisé par l'application
 
 ### Repository
-Les repositories centralisent l'accès aux données, qu'elles proviennent du réseau, du stockage local ou des ressources embarquées. Par exemple :
-- Gestion des téléchargements.
-- Accès aux paroles et aux fichiers audio.
+On utilise un repository pour manipuler et télécharger la liste de musique
 
 ### Worker 
 Les workers assurent les tâches en arrière-plan, comme :
 - Le téléchargement des fichiers audio et des paroles.
-- La gestion des notifications pour informer l'utilisateur de la progression des tâches.
+- la sérialisation des paroles une fois qu'elles sont téléchargées
 
 ## Logique métier 
 
 ### Fonctionnement du menu 
-Le menu permet de sélectionner une musique parmi les options disponibles. Il est mis à jour dynamiquement en fonction des fichiers téléchargés ou disponibles sur le réseau.
+Le menu permet de télécharger une première fois ou remettre à jour la liste des musiques présentes ensuite dans la cache de l'application.
+Ensuite le menu se décompose en trois parties :
+- l'affichage des musiques dans grille avec un défilement verticale 
+- options de filtre sur l'état d'une musique et sur le nom de l'artiste ou le titre de la musique qui actualise dynamiquement la grille des musiques
+- une barre d'options qui permettent :
+    - de quitter l'application 
+    - de changer le thème de l'application 
+    - de retélécharger la liste des musiques 
+
+### Etat d'une musique 
+Une musique peut être dans plusieurs états : vérouillée, dévérouillée ou téléchargée. Dans chacun des cas l'affichage de la musique sera différent :
+- vérouillée : la musique est affichée grisée et on ne peut pas intéragir avec
+- dévérouillée : des fichiers existent pour la musique mais ne sont pas présentent dans le cache de l'application. Un bouton "Télécharger" est disponible pour récupérer les données de la musique depuis le serveur
+- téléchargée : les données de la musique sont présentes dans la cache de l'application. On affiche alors deux boutons. Un premier pour lancer le karaokée sur cette musique et deuxième pour supprimer la musique du cache.
+
+### Logique de téléchargement d'une musique
+Les fichiers MP3 et les paroles sont téléchargés via des workers, puis stockés localement dans le cache. Une fois le téléchargement terminé, l'état de la musique passe de "dévérouillée" à "téléchargée", ce qui les rend permet le lancement du karaoke ensuite.
 
 ### Fonctionnement du karaoke 
-Lors de la lecture d'une musique, les paroles s'affichent et défilent sur l'écran en synchronisation avec l'audio. Cette synchronisation repose sur les timers définis dans les données des paroles.
+Lorsqu'une musique est sélectionée, on initialise un ExoPlayer avec le fichier mp3 de la musique et on charge les paroles. Les paroles sont affichées à l'écran aven un curseur qui défile selon l'avancement de la musique.
+L'écran du karaokée comprend également d'autres fonctionnalités:
+- un curseur pour se déplacer dans la musique
+- une minuteur pour afficher le temps d'avacement dans la musique
+- un bouton pause
+- un bouton de rénitialisation pour revenir directement au début de la musique
+- un bouton de retour au menu
 
-### Logique de téléchargement 
-Les fichiers MP3 et les paroles sont téléchargés via des workers, puis stockés localement. Une fois le téléchargement terminé, l'état de chaque élément passe à "téléchargé", ce qui les rend accessibles hors ligne.
+### Affichage des paroles 
+Afin d'afficher correctement les paroles, on récupère depuis l'exoPlayer la position dans la musique, puis on récupère la ligne à mettre à l'écran dans les paroles de la musique à l'aide du temps de début et du temps de fin de la ligne. 
+Pour l'avancement du curseur, on calcul un nombre flottant entre 0 et 1 pour avoir la progression dans la phrase actuel de la phrase dans la playlist:
+progress = (currentPosition - it.startTime) / (it.endTime - it.startTime)
+Puis à l'aide de la position du texte affiché et de la taille du texte on place correctement le curseur sur la phrase en mettant un décalage sur la position intiial du cuseur
+x = ( ((textWidth.value * (progress-0.5))).dp)
 
 ### Mise en place des thèmes 
-L'application permet de basculer entre différents thèmes (clair, sombre) pour améliorer l'expérience utilisateur dans divers environnements.
+L'application permet de basculer entre différents thèmes (clair, sombre, bleu, japonais) pour améliorer l'expérience utilisateur.
 
 ## Technologies utilisées 
 
 ### ExoPlayer 
-Utilisé pour la lecture audio, ExoPlayer offre des performances optimales et une personnalisation avancée pour gérer les fichiers MP3 et leurs états.
+Utilisé pour la lecture audio, ExoPlayer offre des performances optimales et une personnalisation avancée pour gérer les fichiers audio MP3.
 
 ### WorkManager
 Gère les tâches en arrière-plan, comme le téléchargement, de manière fiable, même en cas de redémarrage de l'application.
@@ -66,24 +90,28 @@ Simplifie la création de l'interface utilisateur grâce à une approche déclar
 ## Choix techniques 
 
 ### Mode paysage 
-L'application est conçue uniquement pour le mode paysage afin de maximiser la lisibilité des paroles et l'expérience immersive.
+L'application est conçue uniquement pour le mode paysage afin de maximiser la lisibilité des paroles et l'expérience immersive. 
 
-### PreferenceSharded 
-Les préférences partagées sont utilisées pour stocker des configurations simples, comme le thème sélectionné ou les dernières chansons jouées.
+### PreferenceSharded & Cache
+Les préférences partagées sont utilisées pour stocker le dernier thème utilisé tandis que les fichiers mp3 et les paroles sont stockées directement dans le cache car ces fichiers sont beaucoup plus volumineux 
 
-### KaraokeViewModel
-Un ViewModel central gère les états globaux de l'application, comme la synchronisation des paroles, les contrôles de lecture, et les paramètres utilisateur.
+## Améliorations envisageables 
 
-## Amélioration technique 
-
-### Mode portrait & taille de texte
-Ajouter un mode portrait et permettre la personnalisation de la taille des textes pour une meilleure accessibilité.
+### Améliorations visuelles
+Plusieurs amélioration graphique pourrait permettre à l'application d'être plus flexible et de mieux correspondre à chaque appareil :
+- Création d'un design pour le mode portait afin de permettre l'usage de l'application dans toutes les circonstances 
+- Adaptabilité de la police d'écriture du texte afin de s'aggradir en cas d'utilisation de l'application sur tablette
+- Ajout d'animation en fond pendant le karaoke pour un rendu plus dynamique
 
 ### Personalisation de l'application avancée 
-Intégrer des options permettant de personnaliser les couleurs, les polices et les animations de l'interface utilisateur.
+L'application ne permet pas plus de personnalisation que la selection parmis une selection prédéfinie de thème. Quelques idées à rajouter pour une application plus versatiles :
+- Permettre la création de thèmes personnalisés par l'utilisateur stockées ensuite dans le cache de l'application
+- Importer des musiques directement depuis l'appareil Android de l'utilisateur 
+- Selection de la police d'écriture et de la taille de caractère affiché à l'écran
 
 ### Gestion des paroles du karaoke 
-Améliorer le système de synchronisation des paroles, notamment pour gérer des écarts possibles lors de la lecture.
+Actuellemement lors de la sérialisation des paroles, les lignes des paroles sont associé à uniquement un timecode afin de simplifier la logique d'affichage du curseur et des paroles. Bien que cette simplification ne pose aucun soucis pour la grande majorité des paroles, parfois un mot est divisé par un timecode à cause d'un changement de rythme dans la musique, à ce moment là, avec le systeme actuel celui-ci sera divisé en deux phrases à l'écran : par exemple "again" peut être divisé en "a" puis "gain".
+La solution serait pour de ne pas travailler sur le format **LyricsLine** mais avec un format différent qui serait une liste composées de fragment de phrase que l'on afficherait itérativement à l'écran avec un décalage successif pour recomposer la phrase entière. Le calcul de progression serait entièrement à refaire alors pour que le curseur se déplace correctement tout le long de le phrase en respectant le rythme associé à chaque fraguement de musique
 
 ### Ajout de test unitaire 
 Mettre en place des tests unitaires pour garantir la fiabilité du code, notamment sur les modules critiques comme la synchronisation et les téléchargements.
