@@ -40,16 +40,18 @@ open class KaraokeViewModel : ViewModel() {
      * @param uri L'URI du fichier audio à lire.
      */
     fun initializePlayer(context: Context, uri: Uri) {
-        // Libérer et réinitialiser l'ancienne instance
-        exoPlayer?.release()
-        exoPlayer = null
+        exoPlayer?.release() // Libérer l'ancienne instance si elle existe
+        exoPlayer = ExoPlayer.Builder(context).build()
 
-        // Créer une nouvelle instance d'ExoPlayer
-        exoPlayer = ExoPlayer.Builder(context).build().apply {
-            setMediaItem(MediaItem.fromUri(uri))
-            prepare() // Préparer le lecteur
-            if (isPlaying) play() // Reprendre la lecture si elle était active
+        exoPlayer?.setMediaItem(MediaItem.fromUri(uri))
+
+        exoPlayer?.seekTo(0L)
+        exoPlayer?.prepare()
+
+        if (isPlaying) {
+            exoPlayer?.play() // Reprendre la lecture si elle était en cours
         }
+
     }
 
     /**
