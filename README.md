@@ -20,6 +20,9 @@ Android studio devrait afficher le téléphone dans les appareils sur lesquels i
 
 # Documentation :
 
-La documentation peut être trouver ici :
+La présentation du projet peut être trouvé ici :
+[Présentation](./Présentation.md)
+
+La documentation peut être trouvé ici :
 [Documentation](./Documentation.md)
 
