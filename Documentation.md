@@ -2,7 +2,7 @@
 
 ## Description générale
 
-./presentation.md
+[Ouvrir la présentation](./Présentation.md)
 
 ## Structure modulaire 
 

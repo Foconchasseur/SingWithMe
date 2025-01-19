@@ -2,12 +2,11 @@
 
 L'application est prévu pour supporter les versions supérieurs entre Android 7.0 (apk 24) Android 15 (apk 35).
 
-
 # Installation 
 
 ## Par l'APK
 
-L'apk peut être trouver à ./....../SingWithMe.apk
+L'application peut être installé depuis l'[apk SingWithMe](./singwithmeRossetSabbiSciotti.apk)
 Il suffit de la transferer sur le téléphone puis de le retrouver par l'explorateur de fichier puis de l'executer en cliquant dessus et d'accepter d'installer l'application.
 
 ## Recompilation par Android Studio
