@@ -30,4 +30,10 @@ Après cela l'utilisateur doit pouvoir choisir une musique à télécharger et l
 
 ### Le Karaoké :
 
-Une fois la musique séléctionné, l'application doit lire le fichier .mp3 et afficher les paroles stocker dans le fichier .md 
+Une fois la musique séléctionné, l'application doit lire le fichier .mp3 et afficher les paroles stocker dans le fichier .md. 
+
+Pour afficher les paroles à dire, l'application affiche un texte noir pour les future parole et un texte rouge pour les paroles précédente. De plus un petit indiquateur gris indique le moment de la ligne sur lequel on est.
+
+Les silences des musique sont représenté par ". . ."
+
+De plus nous avons rajouter un slider permettant d'avancer dans la musique.
