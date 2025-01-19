@@ -11,7 +11,7 @@ Les modèles représentent les données principales de l'application tels que :
 - **Song** : Contient **ID** ainsi que le lien vers les fichiers de la musique s'ils existent, .
 - **ID** : Contient le titre de la musique et l'artiste d'une musique.
 - **LyricsLine** : Gère une ligne de parole avec son timer de départ et son timer de fin.
-- **SongData** : Contient les informations d'une musique tel qu'une liste de **LyricsLine**
+- **SongData** : Contient les informations d'une musique telle qu'une liste de **LyricsLine**
 ### Objects 
 Les objets regroupent les instances réutilisables ou partagées à travers l'application, comme des singletons pour gérer les ressources ou les configurations globales.
 
@@ -58,19 +58,19 @@ Une musique peut être dans plusieurs états : vérouillée, dévérouillée ou 
 Les fichiers MP3 et les paroles sont téléchargés via des workers, puis stockés localement dans le cache. Une fois le téléchargement terminé, l'état de la musique passe de "dévérouillée" à "téléchargée", ce qui les rend permet le lancement du karaoke ensuite.
 
 ### Fonctionnement du karaoke 
-Lorsqu'une musique est sélectionée, on initialise un ExoPlayer avec le fichier mp3 de la musique et on charge les paroles. Les paroles sont affichées à l'écran aven un curseur qui défile selon l'avancement de la musique.
+Lorsqu'une musique est sélectionnée, on initialise un ExoPlayer avec le fichier mp3 de la musique et on charge les paroles. Les paroles sont affichées à l'écran avec un curseur qui défile selon l'avancement de la musique.
 L'écran du karaokée comprend également d'autres fonctionnalités:
 - un curseur pour se déplacer dans la musique
 - une minuteur pour afficher le temps d'avacement dans la musique
 - un bouton pause
-- un bouton de rénitialisation pour revenir directement au début de la musique
+- un bouton de réinitialisation pour revenir directement au début de la musique
 - un bouton de retour au menu
 
 ### Affichage des paroles 
 Afin d'afficher correctement les paroles, on récupère depuis l'exoPlayer la position dans la musique, puis on récupère la ligne à mettre à l'écran dans les paroles de la musique à l'aide du temps de début et du temps de fin de la ligne. 
 Pour l'avancement du curseur, on calcul un nombre flottant entre 0 et 1 pour avoir la progression dans la phrase actuel de la phrase dans la playlist:
 progress = (currentPosition - it.startTime) / (it.endTime - it.startTime)
-Puis à l'aide de la position du texte affiché et de la taille du texte on place correctement le curseur sur la phrase en mettant un décalage sur la position intiial du cuseur
+Puis à l'aide de la position du texte affiché et de la taille du texte on place correctement le curseur sur la phrase en mettant un décalage sur la position initial du cuseur
 x = ( ((textWidth.value * (progress-0.5))).dp)
 
 ### Mise en place des thèmes 
@@ -93,7 +93,7 @@ Simplifie la création de l'interface utilisateur grâce à une approche déclar
 L'application est conçue uniquement pour le mode paysage afin de maximiser la lisibilité des paroles et l'expérience immersive. 
 
 ### PreferenceSharded & Cache
-Les préférences partagées sont utilisées pour stocker le dernier thème utilisé tandis que les fichiers mp3 et les paroles sont stockées directement dans le cache car ces fichiers sont beaucoup plus volumineux 
+Les préférences partagées sont utilisées pour stockés le dernier thème utilisé tandis que les fichiers mp3 et les paroles sont stockés directement dans le cache car ces fichiers sont beaucoup plus volumineux 
 
 ## Améliorations envisageables 
 
@@ -104,8 +104,8 @@ Plusieurs amélioration graphique pourrait permettre à l'application d'être pl
 - Ajout d'animation en fond pendant le karaoke pour un rendu plus dynamique
 
 ### Personalisation de l'application avancée 
-L'application ne permet pas plus de personnalisation que la selection parmis une selection prédéfinie de thème. Quelques idées à rajouter pour une application plus versatiles :
-- Permettre la création de thèmes personnalisés par l'utilisateur stockées ensuite dans le cache de l'application
+L'application ne permet pas plus de personnalisation que la sélection parmi une selection prédéfinie de thème. Quelques idées à rajouter pour une application plus versatiles :
+- Permettre la création de thèmes personnalisés par l'utilisateur stockés ensuite dans le cache de l'application
 - Importer des musiques directement depuis l'appareil Android de l'utilisateur 
 - Selection de la police d'écriture et de la taille de caractère affiché à l'écran
 
